@@ -1,22 +1,25 @@
-package org.education.network.security.model.response;
+package org.education.network.security.auth.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public class LoginRes {
-    private String email;
+@Builder
+public class JwtDto {
+
     private String accessToken;
     private String refreshToken;
 
     @Override
     public String toString() {
         return "{" +
-                "email='" + email + '\'' +
-                ", accessToken='" + accessToken + '\'' +
+                "accessToken='" + accessToken + '\'' +
                 ", refreshToken='" + refreshToken + '\'' +
                 '}';
     }

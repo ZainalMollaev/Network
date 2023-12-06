@@ -13,27 +13,34 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class JwtUtil {
 
-    private final String secret_key = "mysecretkeymysecretkeymysecretkeymysecretkey";
-    private long accessTokenValidity = 60*60*1000;
-
     private final JwtParser jwtParser;
-
-    private final String TOKEN_HEADER = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
+    private final String secret_key = "mysecretkeymysecretkeymysecretkeymysecretkey";
 
     public JwtUtil(){
         this.jwtParser = Jwts.parser().setSigningKey(secret_key);
     }
 
-    public String createToken(UserDto user) {
+    private String createToken(UserDto user, long tokenValidity) {
+
         Claims claims = Jwts.claims().setSubject(user.getEmail());
         Date tokenCreateTime = new Date();
-        Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
+        Date validity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(tokenValidity));
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(tokenValidity)
+                .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secret_key)
                 .compact();
+
+    }
+
+    public String createAccessToken(UserDto user) {
+        long accessTokenValidity = 24 * 60 * 60 * 1000;
+        return createToken(user, accessTokenValidity);
+    }
+
+    public String createRefreshToken(UserDto user) {
+        long refreshTokenValidity = 15 * 24 * 60 * 60 * 1000;
+        return createToken(user, refreshTokenValidity);
     }
 
     private Claims parseJwtClaims(String token) {
@@ -44,7 +51,7 @@ public class JwtUtil {
         try {
             String token = resolveToken(req);
             if (token != null) {
-                return parseJwtClaims(token);
+                parseJwtClaims(token);
             }
             return null;
         } catch (ExpiredJwtException ex) {
@@ -54,15 +61,19 @@ public class JwtUtil {
             req.setAttribute("invalid", ex.getMessage());
             throw ex;
         }
+
     }
 
     public String resolveToken(HttpServletRequest request) {
 
+        String TOKEN_HEADER = "Authorization";
         String bearerToken = request.getHeader(TOKEN_HEADER);
+        String TOKEN_PREFIX = "Bearer ";
         if (bearerToken != null && bearerToken.startsWith(TOKEN_PREFIX)) {
             return bearerToken.substring(TOKEN_PREFIX.length());
         }
         return null;
+
     }
 
     public boolean validateClaims(Claims claims) throws AuthenticationException {
@@ -72,14 +83,5 @@ public class JwtUtil {
             throw e;
         }
     }
-
-    public String getEmail(Claims claims) {
-        return claims.getSubject();
-    }
-
-    private List<String> getRoles(Claims claims) {
-        return (List<String>) claims.get("roles");
-    }
-
 
 }

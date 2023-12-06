@@ -1,63 +1,29 @@
 package org.education.network.security.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.education.network.db.model.dto.UserDto;
-import org.education.network.db.service.UserService;
-import org.education.network.security.auth.JwtUtil;
-import org.education.network.security.model.response.ErrorRes;
-import org.education.network.security.model.response.LoginRes;
-import org.springframework.http.HttpStatus;
+import org.education.network.security.services.LogSignService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rest/auth")
+@RequestMapping("/network/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final UserService userService;
-    private final JwtUtil jwtUtil;
+    private final LogSignService logSignService;
 
     @PostMapping(value = "/login")
-    public ResponseEntity login(@RequestBody UserDto login)  {
-
-        try {
-
-            Authentication authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
-            String email =  authentication.getName();
-            UserDto user = new UserDto(email,"");
-            String token = jwtUtil.createToken(user);
-            LoginRes loginRes = new LoginRes(email,token);
-
-            return ResponseEntity.ok(loginRes);
-
-        } catch (BadCredentialsException e){
-            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST,"Invalid username or password");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        } catch (Exception e){
-            ErrorRes errorResponse = new ErrorRes(HttpStatus.BAD_REQUEST, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        }
-
+    public ResponseEntity login(HttpServletRequest request) {
+        return logSignService.login((String) request.getAttribute("login_res"));
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto signUp){
-
-        // checking for email exists in a database
-        if(userService.existsByEmail(signUp.getEmail())){
-            return new ResponseEntity<>("Email is already exist!", HttpStatus.BAD_REQUEST);
-        }
-
-        userService.saveUser(signUp);
-
-        return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
+    public ResponseEntity<?> registerUser(@RequestBody UserDto signUp) {
+        return logSignService.registerUser(signUp);
     }
 
 }
