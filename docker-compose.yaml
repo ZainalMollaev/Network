@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  network-data:
+    image: postgres:16
+    container_name: network-data
+    restart: always
+    environment:
+      POSTGRES_USER: network
+      POSTGRES_PASSWORD: network
+      POSTGRES_DB: network
+      STOP_ON_MIGRATION_FAILURE: "false"
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/netdata
+    healthcheck:
+      test: PGPASSWORD=network psql -d network -U network -w -c '\q'
+      interval: 20s
+      timeout: 10s
