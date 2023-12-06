@@ -1,4 +1,4 @@
-package org.education.network.db.model;
+package org.education.network.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,13 +1,16 @@
-package org.education.network.security.model.response;
+package org.education.network.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class LoginRes {
+
     private String email;
     private String accessToken;
     private String refreshToken;

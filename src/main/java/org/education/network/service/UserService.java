@@ -1,10 +1,10 @@
-package org.education.network.db.service;
+package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
-import org.education.network.db.mapping.UserMapping;
-import org.education.network.db.model.User;
-import org.education.network.db.model.dto.UserDto;
-import org.education.network.db.repository.UserRepository;
+import org.education.network.mapping.UserMapping;
+import org.education.network.model.User;
+import org.education.network.dto.UserDto;
+import org.education.network.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +17,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     public UserDto getUserByEmail(String email) {
-
         User user = userRepository.findByEmail(email);
-
         return userMapping.userToUserDto(user);
     }
 
@@ -30,7 +28,6 @@ public class UserService {
     public void saveUser(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = userMapping.userDtoToUser(userDto);
-
         userRepository.save(user);
     }
 

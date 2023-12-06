@@ -1,4 +1,4 @@
-package org.education.network.security.model.response;
+package org.education.network.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

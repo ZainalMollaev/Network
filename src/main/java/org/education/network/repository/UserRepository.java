@@ -1,6 +1,6 @@
-package org.education.network.db.repository;
+package org.education.network.repository;
 
-import org.education.network.db.model.User;
+import org.education.network.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

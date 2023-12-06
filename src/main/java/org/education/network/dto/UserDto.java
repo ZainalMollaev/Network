@@ -1,4 +1,4 @@
-package org.education.network.db.model.dto;
+package org.education.network.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -28,32 +27,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain)
-            {
+                                    FilterChain filterChain) {
+        try {
+            Claims claims = jwtUtil.resolveClaims(request);
 
-                try {
-
-                    Claims claims = jwtUtil.resolveClaims(request);
-
-                    if(claims != null && jwtUtil.validateClaims(claims)) {
-
-                        String email = claims.getSubject();
-                        Authentication authentication =
-                                new UsernamePasswordAuthenticationToken(email, "");
-
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                    }
-
-                    filterChain.doFilter(request, response);
-
-                } catch (ServletException | IOException e) {
-                    try {
-                        throw new AuthenticationNetworkException(e.getMessage());
-                    } catch (AuthenticationNetworkException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
+            if(claims != null && jwtUtil.validateClaims(claims)) {
+                String email = claims.getSubject();
+                Authentication authentication =
+                        new UsernamePasswordAuthenticationToken(email, "");
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            filterChain.doFilter(request, response);
+        } catch (ServletException | IOException e) {
+            throw new AuthenticationNetworkException(e.getMessage());
+        }
+    }
+
 }
 

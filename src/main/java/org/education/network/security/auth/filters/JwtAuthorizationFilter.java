@@ -5,13 +5,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.education.network.db.model.dto.UserDto;
-import org.education.network.db.service.UserService;
+import org.education.network.dto.UserDto;
+import org.education.network.service.UserService;
 import org.education.network.security.auth.JwtUtil;
-import org.education.network.security.model.response.CommonResponse;
-import org.education.network.security.model.response.LoginRes;
-import org.education.network.security.services.JsonServices;
+import org.education.network.dto.CommonResponse;
+import org.education.network.dto.LoginRes;
+import org.education.network.service.JsonServices;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -39,35 +37,35 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String accessToken = jwtUtil.resolveToken(request);
 
-        LoginRes loginRes;
-
-
-        if (accessToken == null && request.getRequestURI().contains("login")) {
-
+        if (accessToken == null) {
             String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
-            UserDto login = (UserDto) json.getObject(requestData, UserDto.class);
-
+            UserDto user = (UserDto) json.getObject(requestData, UserDto.class);
             Authentication authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
-
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
             String email = authentication.getName();
-            UserDto user = new UserDto(email, "", null);
+
             accessToken = jwtUtil.createAccessToken(user);
             String refreshToken = jwtUtil.createRefreshToken(user);
             user.setRefreshToken(refreshToken);
             userService.updateRefreshToken(user);
-            loginRes = new LoginRes(email, accessToken, refreshToken);
 
-            request.setAttribute("login_res", CommonResponse.builder()
+            request.setAttribute("loginRes", CommonResponse.builder()
                     .hasErrors(false)
-                    .body(loginRes)
-                    .build()
+                    .body(
+                            LoginRes.builder()
+                            .email(email)
+                            .accessToken(accessToken)
+                            .refreshToken(refreshToken)
+                            .build()
+                    ).build()
                     .toString());
-
         }
-
         filterChain.doFilter(request, response);
+    }
 
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request){
+        return !request.getRequestURI().equals("/network/auth/login");
     }
 
 }

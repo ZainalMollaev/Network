@@ -1,7 +1,7 @@
-package org.education.network.db.mapping;
+package org.education.network.mapping;
 
-import org.education.network.db.model.User;
-import org.education.network.db.model.dto.UserDto;
+import org.education.network.model.User;
+import org.education.network.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
