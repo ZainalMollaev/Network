@@ -24,8 +24,9 @@
         <!--        db-->
         <flyway-core.version>10.1.0</flyway-core.version>
         <postgres.version>42.7.0</postgres.version>
-        <jwt.version>0.11.5</jwt.version>
+        <org.flywaydb.version>9.16.3</org.flywaydb.version>
         <!--        optional-->
+        <jwt.version>0.11.5</jwt.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <lombok.version>1.18.30</lombok.version>
@@ -68,6 +69,11 @@
             <version>${postgres.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${org.flywaydb.version}</version>
+        </dependency>
 
         <!--        security-->
         <dependency>

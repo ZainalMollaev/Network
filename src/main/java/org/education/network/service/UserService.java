@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.mapping.UserMapping;
 import org.education.network.model.User;
 import org.education.network.dto.UserDto;
-import org.education.network.repository.UserRepository;
+import org.education.network.model.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

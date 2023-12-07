@@ -1,4 +1,4 @@
-package org.education.network.repository;
+package org.education.network.model.repository;
 
 import org.education.network.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
