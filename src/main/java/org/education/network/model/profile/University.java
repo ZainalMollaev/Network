@@ -1,4 +1,4 @@
-package org.education.network.model.resume;
+package org.education.network.model.profile;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,19 +17,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Entity
-public class Job {
+public class University {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false)
-    private String company;
-    @Column(nullable = false)
-    private String title;
-    @Column(nullable = false)
-    private String location;
-    private String description;
-    @Column(nullable = false)
-    private String duration;
-    private String picture;
+    private String name;
+
 }

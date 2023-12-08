@@ -80,4 +80,8 @@ public class JwtUtil {
         }
     }
 
+    public String getEmail(HttpServletRequest req){
+        return resolveClaims(req).getSubject();
+    }
+
 }

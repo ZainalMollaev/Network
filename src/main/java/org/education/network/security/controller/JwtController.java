@@ -14,7 +14,7 @@ import java.time.Instant;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/network/jwt")
+@RequestMapping("/jwt")
 public class JwtController {
 
     private final JwtControllerService jcs;

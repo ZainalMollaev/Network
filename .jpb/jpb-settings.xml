@@ -5,7 +5,12 @@
     <persistence-units>
       <persistence-unit name="Default">
         <packages>
-          <package value="org.education.network.model" />
+          <package value="org.education.network.model.profile" />
+        </packages>
+      </persistence-unit>
+      <persistence-unit moduleName="Network" name="Default">
+        <packages>
+          <package value="org.education.network.model.profile" />
         </packages>
       </persistence-unit>
     </persistence-units>

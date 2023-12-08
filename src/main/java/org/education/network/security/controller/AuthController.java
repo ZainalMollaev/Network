@@ -3,13 +3,13 @@ package org.education.network.security.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.education.network.dto.UserDto;
+import org.education.network.dto.UserProfileDto;
 import org.education.network.service.LogSignService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/network/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto signUp) {
+    public ResponseEntity<?> registerUser(@RequestBody UserProfileDto signUp) {
         return logSignService.registerUser(signUp);
     }
 
