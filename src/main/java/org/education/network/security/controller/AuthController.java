@@ -3,8 +3,8 @@ package org.education.network.security.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.education.network.db.model.dto.UserDto;
-import org.education.network.security.services.LogSignService;
+import org.education.network.dto.UserDto;
+import org.education.network.service.LogSignService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ public class AuthController {
 
     @PostMapping(value = "/login")
     public ResponseEntity login(HttpServletRequest request) {
-        return logSignService.login((String) request.getAttribute("login_res"));
+        return logSignService.login((String) request.getAttribute("loginRes"));
     }
 
     @PostMapping("/signup")

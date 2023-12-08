@@ -1,12 +1,16 @@
 package org.education.network.security.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.education.network.db.model.dto.UserDto;
-import org.education.network.security.services.JwtControllerService;
+import org.education.network.dto.CommonResponse;
+import org.education.network.dto.UserDto;
+import org.education.network.service.JwtControllerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,15 +20,25 @@ public class JwtController {
     private final JwtControllerService jcs;
 
     @PostMapping("/accessToken")
-    public String getAccessToken(@RequestBody UserDto userDto){
-        return jcs.updateAccess(userDto).toString();
+    public ResponseEntity getAccessToken(@RequestBody UserDto userDto){
+        return ResponseEntity.ok(
+                CommonResponse.builder()
+                        .hasErrors(true)
+                        .body(jcs.updateAccess(userDto))
+                        .createdAt(Instant.now().toString())
+                        .build()
+        );
     }
 
     @PostMapping ("/refreshToken")
-    public String getRefreshToken(@RequestBody UserDto userDto){
-
-        return jcs.updateRefresh(userDto).toString();
-
+    public ResponseEntity getRefreshToken(@RequestBody UserDto userDto){
+        return ResponseEntity.ok(
+                CommonResponse.builder()
+                        .hasErrors(true)
+                        .body(jcs.updateRefresh(userDto))
+                        .createdAt(Instant.now().toString())
+                        .build()
+        );
     }
 
 }
