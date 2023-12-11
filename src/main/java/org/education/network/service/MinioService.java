@@ -22,8 +22,8 @@ public class MinioService {
         minioClient =
                 MinioClient.builder()
                         .endpoint("https://localhost", 9000, false)
-                        .credentials("TQE5viifimaaSC6iSYhA",
-                                "e9c8lPtMLbYgdYkcOGNcQxN3Y1mIdWQCvkwlDfVi")
+                        .credentials("",
+                                "")
                         .build();
     }
 
