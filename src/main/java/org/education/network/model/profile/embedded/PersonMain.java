@@ -24,7 +24,7 @@ public class PersonMain {
     private String name;
     @Column(nullable = false)
     private String lastname;
-    //@Column(nullable = false)
+    @Column(nullable = false)
     private LocalDate birthDate;
     @Column(nullable = false)
     private boolean gender;

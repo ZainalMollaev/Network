@@ -20,8 +20,8 @@ public class UserProfileService {
         profileRepository.deleteAvatarByEmail(email);
     }
 
-    public void updateAvatar(String email, String avatar) {
-        profileRepository.updateAvatarByEmail(email, avatar);
+    public void updateAvatar(String email) {
+        profileRepository.updateAvatarByEmail(email, "avatar/"+email);
     }
 
     public void saveUserProfile(UserProfileDto user) {
