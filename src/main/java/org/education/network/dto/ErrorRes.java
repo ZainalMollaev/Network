@@ -14,5 +14,4 @@ public class ErrorRes {
     private String httpDescription;
     private String message;
 
-
 }

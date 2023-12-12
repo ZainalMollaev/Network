@@ -38,6 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String accessToken = jwtUtil.resolveToken(request);
 
         if (accessToken == null) {
+
             String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
             UserDto user = (UserDto) json.getObject(requestData, UserDto.class);
             Authentication authentication =
@@ -60,12 +61,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     ).build()
                     .toString());
         }
+
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request){
-        return !request.getRequestURI().equals("/network/auth/login");
+        return !request.getRequestURI().equals("/auth/login");
     }
 
 }

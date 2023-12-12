@@ -14,13 +14,13 @@ import java.time.Instant;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/network/jwt")
+@RequestMapping("/jwt")
 public class JwtController {
 
     private final JwtControllerService jcs;
 
     @PostMapping("/accessToken")
-    public ResponseEntity getAccessToken(@RequestBody UserDto userDto){
+    public ResponseEntity getAccessToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(true)
@@ -31,7 +31,7 @@ public class JwtController {
     }
 
     @PostMapping ("/refreshToken")
-    public ResponseEntity getRefreshToken(@RequestBody UserDto userDto){
+    public ResponseEntity getRefreshToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(true)
