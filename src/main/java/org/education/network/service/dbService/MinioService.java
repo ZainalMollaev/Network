@@ -1,4 +1,4 @@
-package org.education.network.service;
+package org.education.network.service.dbService;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
@@ -25,7 +25,7 @@ public class MinioService {
     private MinioClient minioClient;
     private final MinioAppProperties properties;
 
-    public void uploadFile(UUID photoId, InputStream file)
+    public void uploadFile(String photoId, InputStream file)
             throws IOException, NoSuchAlgorithmException, InvalidKeyException{
         try {
             minioClient.putObject(
@@ -35,7 +35,7 @@ public class MinioService {
                                     file.available(),
                                     -1)
                             .contentType(properties.getJpegType())
-                            .object(photoId.toString())
+                            .object(photoId)
                             .build()
             );
         } catch (MinioException e) {

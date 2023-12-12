@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.UserDto;
 import org.education.network.properties.FilterProperties;
-import org.education.network.service.UserService;
+import org.education.network.service.dbService.UserService;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.LoginRes;

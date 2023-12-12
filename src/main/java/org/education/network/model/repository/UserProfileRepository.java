@@ -42,12 +42,19 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             "WHERE u.email = :email)")
     void deleteBackPhotoByEmail(String email);
 
-    @Query("SELECT COALESCE(up.backPhoto, up.avatar)" +
+    @Query("SELECT up.avatar " +
             "FROM UserProfile up " +
             "WHERE up.id = " +
             "(SELECT u.id " +
             "FROM User u " +
             "WHERE u.email = :email) ")
-    String findPhotoIdByEmail(String email);
+    String findAvatarIdByEmail(String email);
 
+    @Query("SELECT up.backPhoto " +
+            "FROM UserProfile up " +
+            "WHERE up.id = " +
+            "(SELECT u.id " +
+            "FROM User u " +
+            "WHERE u.email = :email) ")
+    String findBackPhotoIdByEmail(String email);
 }

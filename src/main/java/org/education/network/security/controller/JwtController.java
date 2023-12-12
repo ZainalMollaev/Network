@@ -3,7 +3,7 @@ package org.education.network.security.controller;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.UserDto;
-import org.education.network.service.JwtControllerService;
+import org.education.network.service.controllerService.JwtControllerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

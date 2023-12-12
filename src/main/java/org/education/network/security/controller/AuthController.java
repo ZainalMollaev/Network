@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.education.network.dto.UserProfileDto;
-import org.education.network.service.LogSignService;
+import org.education.network.service.controllerService.LogSignService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

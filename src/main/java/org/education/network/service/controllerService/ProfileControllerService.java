@@ -1,10 +1,11 @@
-package org.education.network.service;
+package org.education.network.service.controllerService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.CommonResponse;
-import org.education.network.dto.MediaDto;
 import org.education.network.security.auth.JwtUtil;
+import org.education.network.service.dbService.MinioService;
+import org.education.network.service.profile.UserProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,29 +14,27 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileControllerService {
 
-    private final UserProfileService userProfileService;
-    private final JwtUtil jwtUtil;
+    private final List<UserProfileService> profileItems;
     private final MinioService minioService;
 
-    public ResponseEntity deleteFile(HttpServletRequest req)
+    public ResponseEntity deleteFile(String email,
+                                     String photoId,
+                                     String method)
             throws IOException, NoSuchAlgorithmException, InvalidKeyException {
-        String email = jwtUtil.getEmail(req);
-        String[] url = req.getRequestURI().split("/");
-        String prefix = url[url.length - 1];
 
-        String photoId = userProfileService.getPhoto(email);
-
-        if (prefix.equals("avatar")) {
-            userProfileService.deleteAvatar(email);
-        } else if (prefix.equals("backImg")) {
-            userProfileService.deleteBackPhoto(email);
-        }
+        profileItems
+                .stream()
+                .filter(i -> i.support(method))
+                .findFirst()
+                .get()
+                .delete(email);
 
         minioService.deleteFile(photoId);
 
@@ -46,20 +45,19 @@ public class ProfileControllerService {
                 .build());
     }
 
-    public ResponseEntity updateFile(HttpServletRequest req,
-                                     MultipartFile file)
+    public ResponseEntity updateFile(String email,
+                                     MultipartFile file,
+                                     String method)
             throws IOException, NoSuchAlgorithmException, InvalidKeyException {
-        String email = jwtUtil.getEmail(req);
-        String[] url = req.getRequestURI().split("/");
-        String prefix = url[url.length - 1];
 
-        UUID photoId = UUID.randomUUID();
+        String photoId = UUID.randomUUID().toString();
 
-        if (prefix.equals("avatar")) {
-            userProfileService.updateAvatar(email, photoId);
-        } else if (prefix.equals("backPhoto")) {
-            userProfileService.updateBackPhoto(email, photoId);
-        }
+        profileItems
+                .stream()
+                .filter(i -> i.support(method))
+                .findFirst()
+                .get()
+                .update(email, photoId);
 
         minioService.uploadFile(
                 photoId,
@@ -73,17 +71,18 @@ public class ProfileControllerService {
         );
     }
 
-    public ResponseEntity getFileId(HttpServletRequest req) {
-        String email = jwtUtil.getEmail(req);
-        String photoId = userProfileService.getPhoto(email);
+    public ResponseEntity getFileId(String email, String method) {
+
+        String photoId = profileItems
+                .stream()
+                .filter(i -> i.support(method))
+                .findFirst()
+                .get()
+                .getPhoto(email);
 
         return ResponseEntity.ok().body(CommonResponse.builder()
                 .hasErrors(false)
-                .body(
-                        MediaDto.builder()
-                                .photoId(photoId)
-                                .build()
-                )
+                .body(photoId)
                 .createdAt(Instant.now().toString())
                 .build()
         );
