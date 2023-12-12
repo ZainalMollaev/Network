@@ -8,6 +8,8 @@ import org.education.network.model.repository.UserProfileRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
@@ -20,15 +22,25 @@ public class UserProfileService {
         profileRepository.deleteAvatarByEmail(email);
     }
 
-    public void updateAvatar(String email) {
-        profileRepository.updateAvatarByEmail(email, "avatar/"+email);
+    public void deleteBackPhoto(String email){
+        profileRepository.deleteBackPhotoByEmail(email);
+    }
+
+    public void updateAvatar(String email, UUID avatarId) {
+        profileRepository.updateAvatarByEmail(email, avatarId);
     }
 
     public void saveUserProfile(UserProfileDto user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserProfile userAndProfile = profileMapper.toEntity(user);
-
         profileRepository.save(userAndProfile);
     }
 
+    public void updateBackPhoto(String email, UUID avatarId) {
+        profileRepository.updateAvatarByEmail(email, avatarId);
+    }
+
+    public String getPhoto(String email) {
+        return profileRepository.findPhotoIdByEmail(email);
+    }
 }

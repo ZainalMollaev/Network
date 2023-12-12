@@ -14,3 +14,18 @@ spring:
     locations: classpath:db/migration
     enabled: true
     baseline-on-migrate: true
+
+properties:
+  filter:
+    attributeName: loginRes
+    loginUrl: /auth/login
+  minio:
+    host: "https://localhost"
+    port: 9000
+    secure: false
+    jpegType: image/jpeg
+    accessToken: TQE5viifimaaSC6iSYhA
+    secretToken: e9c8lPtMLbYgdYkcOGNcQxN3Y1mIdWQCvkwlDfVi
+    backImgLink: backImg/
+    avatarLink: avatar/
+    bucket: buck-avatar

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
     //todo Добавить отложенные запросы
@@ -28,6 +30,24 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             "(SELECT u.id " +
             "FROM User u " +
             "WHERE u.email = :email) ")
-    void updateAvatarByEmail(String email, String avatar);
+    void updateAvatarByEmail(String email, UUID avatar);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE UserProfile up " +
+            "SET up.backPhoto = null " +
+            "WHERE up.id = " +
+            "(SELECT u.id " +
+            "FROM User u " +
+            "WHERE u.email = :email)")
+    void deleteBackPhotoByEmail(String email);
+
+    @Query("SELECT COALESCE(up.backPhoto, up.avatar)" +
+            "FROM UserProfile up " +
+            "WHERE up.id = " +
+            "(SELECT u.id " +
+            "FROM User u " +
+            "WHERE u.email = :email) ")
+    String findPhotoIdByEmail(String email);
 
 }

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.UserDto;
+import org.education.network.properties.FilterProperties;
 import org.education.network.service.UserService;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.CommonResponse;
@@ -13,7 +14,6 @@ import org.education.network.dto.LoginRes;
 import org.education.network.service.JsonServices;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -29,6 +29,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final JsonServices json;
     private final UserService userService;
+    private final FilterProperties properties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -39,22 +40,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (accessToken == null) {
 
-            String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
-            UserDto user = (UserDto) json.getObject(requestData, UserDto.class);
-            Authentication authentication =
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-            String email = authentication.getName();
+            UserDto user = toUser(request);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
             accessToken = jwtUtil.createAccessToken(user);
             String refreshToken = jwtUtil.createRefreshToken(user);
             user.setRefreshToken(refreshToken);
             userService.updateRefreshToken(user);
 
-            request.setAttribute("loginRes", CommonResponse.builder()
+            request.setAttribute(properties.getAttributeName(), CommonResponse.builder()
                     .hasErrors(false)
                     .body(
                             LoginRes.builder()
-                            .email(email)
+                            .email(user.getEmail())
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
                             .build()
@@ -67,7 +65,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request){
-        return !request.getRequestURI().equals("/auth/login");
+        return !request.getRequestURI().equals(properties.getLoginUrl());
+    }
+
+    public UserDto toUser(HttpServletRequest request) throws IOException {
+        String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
+        return json.getObject(requestData, UserDto.class);
     }
 
 }
