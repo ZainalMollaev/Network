@@ -3,6 +3,7 @@ package org.education.network.security.auth;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.education.network.dto.UserDto;
+import org.education.network.security.exceptions.JwtException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
@@ -53,12 +54,8 @@ public class JwtUtil {
                 return parseJwtClaims(token);
             }
             return null;
-        } catch (ExpiredJwtException ex) {
-            req.setAttribute("expired", ex.getMessage());
-            throw ex;
         } catch (Exception ex) {
-            req.setAttribute("invalid", ex.getMessage());
-            throw ex;
+            throw new JwtException(ex);
         }
 
     }

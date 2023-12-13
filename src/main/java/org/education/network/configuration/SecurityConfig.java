@@ -1,7 +1,9 @@
 package org.education.network.configuration;
 
+import lombok.extern.slf4j.Slf4j;
 import org.education.network.security.auth.filters.JwtAuthorizationFilter;
 import org.education.network.security.auth.filters.JwtAuthenticationFilter;
+import org.education.network.security.exceptions.SecurityFilterChainException;
 import org.education.network.service.authService.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig  {
 
     @Bean
@@ -32,20 +35,24 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    JwtAuthenticationFilter jwtAuthenticationFilter,
-                                                   JwtAuthorizationFilter jwtAuthorizationFilter) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize ->
-                authorize
-                        .requestMatchers("/auth/**", "/swagger-ui/index.html").permitAll()
-                        .anyRequest().authenticated()
-        ).sessionManagement(session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthenticationFilter, JwtAuthorizationFilter.class);
+                                                   JwtAuthorizationFilter jwtAuthorizationFilter) {
+        try {
+            http
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(authorize ->
+                    authorize
+                            .requestMatchers("/auth/**", "/swagger-ui/index.html").permitAll()
+                            .anyRequest().authenticated()
+            ).sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+                    .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(jwtAuthenticationFilter, JwtAuthorizationFilter.class);
 
-        return http.build();
+            return http.build();
+        } catch (Exception e) {
+            throw new SecurityFilterChainException(e);
+        }
     }
 
     @Bean

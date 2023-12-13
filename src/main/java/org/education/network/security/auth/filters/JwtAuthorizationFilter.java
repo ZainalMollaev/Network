@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.UserDto;
 import org.education.network.properties.FilterProperties;
+import org.education.network.security.exceptions.AuthenticationNetworkException;
+import org.education.network.security.exceptions.RequestBodyHandlerException;
 import org.education.network.service.dbService.UserService;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.CommonResponse;
@@ -34,7 +36,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain) {
 
         String accessToken = jwtUtil.resolveToken(request);
 
@@ -52,25 +54,34 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     .hasErrors(false)
                     .body(
                             LoginRes.builder()
-                            .email(user.getEmail())
-                            .accessToken(accessToken)
-                            .refreshToken(refreshToken)
-                            .build()
+                                    .email(user.getEmail())
+                                    .accessToken(accessToken)
+                                    .refreshToken(refreshToken)
+                                    .build()
                     ).build()
                     .toString());
         }
 
-        filterChain.doFilter(request, response);
+        try {
+            filterChain.doFilter(request, response);
+        } catch (IOException | ServletException e) {
+            throw new AuthenticationNetworkException(e);
+        }
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request){
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return !request.getRequestURI().equals(properties.getLoginUrl());
     }
 
-    public UserDto toUser(HttpServletRequest request) throws IOException {
-        String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
-        return mapper.readValue(requestData, UserDto.class);
+    public UserDto toUser(HttpServletRequest request) {
+        try {
+            String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
+            return mapper.readValue(requestData, UserDto.class);
+
+        } catch (IOException e) {
+            throw new RequestBodyHandlerException(e);
+        }
     }
 
 }

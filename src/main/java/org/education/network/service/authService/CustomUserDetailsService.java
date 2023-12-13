@@ -5,7 +5,6 @@ import org.education.network.dto.UserDto;
 import org.education.network.service.dbService.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
         UserDto userDto = userService.getUserByEmail(email);
         List<String> roles = List.of("USER");
 
