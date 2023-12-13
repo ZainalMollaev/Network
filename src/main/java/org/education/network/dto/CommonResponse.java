@@ -22,9 +22,9 @@ public class CommonResponse <T>{
     @Override
     public String toString() {
         return "{" +
-                "hasErrors=" + hasErrors +
-                ", body=" + body +
-                ", localDateTime=" + createdAt +
-                '}';
+                "\"hasErrors\" : \"" + hasErrors + "\"" +
+                ", \"body\" : " + body +
+                ", \"localDateTime\" : \"" + createdAt + "\" " +
+                "}";
     }
 }

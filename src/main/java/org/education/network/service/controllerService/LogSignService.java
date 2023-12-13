@@ -1,9 +1,10 @@
 package org.education.network.service.controllerService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.UserProfileDto;
-import org.education.network.service.JsonServices;
 import org.education.network.service.dbService.UserProfileService;
 import org.education.network.service.dbService.UserService;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,15 @@ public class LogSignService {
 
     private final UserService userService;
     private final UserProfileService profileService;
-    private final JsonServices json;
+    private final ObjectMapper mapper;
 
     public ResponseEntity login(String request) {
-        CommonResponse response = json.getObject(request, CommonResponse.class);
+        CommonResponse response;
+        try {
+            response = mapper.readValue(request, CommonResponse.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok(response);
     }
 

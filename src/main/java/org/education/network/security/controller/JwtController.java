@@ -24,7 +24,7 @@ public class JwtController {
 
     @Operation(
             summary = "get access token",
-            description = "generate access token")
+            description = "generate access token and get")
     @PostMapping("/accessToken")
     public ResponseEntity getAccessToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(
@@ -38,7 +38,7 @@ public class JwtController {
 
     @Operation(
             summary = "get refresh token",
-            description = "generate refresh token and save it to postgres users")
+            description = "generate refresh token and save it")
     @PostMapping ("/refreshToken")
     public ResponseEntity getRefreshToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(

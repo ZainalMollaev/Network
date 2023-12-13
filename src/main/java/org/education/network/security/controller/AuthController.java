@@ -27,7 +27,7 @@ public class AuthController {
 
     @Operation(
             summary = "Registration/Signup",
-            description = "save login and credentials to postgres")
+            description = "save login and credentials")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserProfileDto signUp) {
         return logSignService.registerUser(signUp);

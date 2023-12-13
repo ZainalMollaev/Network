@@ -27,7 +27,7 @@ public class MediaController {
 
     @Operation(
             summary = "save picture",
-            description = "Save picture to minio and postgres")
+            description = "Save picture")
     @PostMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity savePicture(@ModelAttribute MediaDto mediaDto) {
         return mediaService.saveMedia(mediaDto);
@@ -35,7 +35,7 @@ public class MediaController {
 
     @Operation(
             summary = "delete picture",
-            description = "delete picture from minio and postgres")
+            description = "delete picture")
     @DeleteMapping(value = "/picture")
     public ResponseEntity deletePicture(@RequestBody MediaDto mediaDto) {
         return mediaService.deleteMedia(mediaDto);
@@ -43,7 +43,7 @@ public class MediaController {
 
     @Operation(
             summary = "get picture's id",
-            description = "Get picture Id from postgres")
+            description = "Get picture's id")
     @GetMapping(value = "/picture/{email}")
     public ResponseEntity getPictureId(@PathVariable("email") String email) {
         return mediaService.getFileId(email);
@@ -51,7 +51,7 @@ public class MediaController {
 
     @Operation(
             summary = "get picture",
-            description = "Get picture itself from minio and postgres")
+            description = "Get picture itself")
     @GetMapping(value = "/picture")
     public ResponseEntity getPicture(@RequestParam("fileId") String fileId) {
         return mediaService.getFile(fileId);
