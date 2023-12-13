@@ -1,4 +1,4 @@
-package org.education.network.service.profile;
+package org.education.network.service.dbService;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.UserProfileDto;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CommonUserProfile {
+public class UserProfileService {
 
     private final UserProfileRepository profileRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
