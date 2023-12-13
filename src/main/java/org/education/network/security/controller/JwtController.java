@@ -17,14 +17,14 @@ import java.time.Instant;
 @RequestMapping("/jwt")
 public class JwtController {
 
-    private final JwtControllerService jcs;
+    private final JwtControllerService jwtControllerService;
 
     @PostMapping("/accessToken")
     public ResponseEntity getAccessToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(true)
-                        .body(jcs.updateAccess(userDto))
+                        .body(jwtControllerService.updateAccess(userDto))
                         .createdAt(Instant.now().toString())
                         .build()
         );
@@ -35,7 +35,7 @@ public class JwtController {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(true)
-                        .body(jcs.updateRefresh(userDto))
+                        .body(jwtControllerService.updateRefresh(userDto))
                         .createdAt(Instant.now().toString())
                         .build()
         );

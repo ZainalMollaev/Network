@@ -18,6 +18,7 @@ public class MediaDto {
 
     private MultipartFile file;
     private String email;
-    private String photoId;
+    private String fileId;
+    private String fileType;
 
 }

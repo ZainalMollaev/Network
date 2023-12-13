@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.UserProfileDto;
 import org.education.network.service.JsonServices;
+import org.education.network.service.dbService.UserProfileService;
 import org.education.network.service.dbService.UserService;
-import org.education.network.service.profile.CommonUserProfile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.time.Instant;
 public class LogSignService {
 
     private final UserService userService;
-    private final CommonUserProfile commonUserProfile;
+    private final UserProfileService profileService;
     private final JsonServices json;
 
     public ResponseEntity login(String request) {
@@ -33,7 +33,7 @@ public class LogSignService {
                     .build());
         }
 
-        commonUserProfile.saveUserProfile(signUp);
+        profileService.saveUserProfile(signUp);
 
         return ResponseEntity.ok(CommonResponse.builder()
                 .hasErrors(false)
