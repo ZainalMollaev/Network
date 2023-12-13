@@ -18,9 +18,9 @@ public class LoginRes {
     @Override
     public String toString() {
         return "{" +
-                "email='" + email + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", refreshToken='" + refreshToken + '\'' +
-                '}';
+                " \"email\" : \"" + email + "\"" +
+                ", \"accessToken\" : \"" + accessToken + "\"" +
+                ", \"refreshToken\" : \"" + refreshToken + "\"" +
+                "}";
     }
 }

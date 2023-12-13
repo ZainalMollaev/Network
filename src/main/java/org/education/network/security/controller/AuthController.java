@@ -1,8 +1,9 @@
 package org.education.network.security.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.education.network.dto.UserProfileDto;
 import org.education.network.service.controllerService.LogSignService;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +12,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Slf4j
+@Tag(name = "AuthController", description = "Registration and Authorization")
 public class AuthController {
 
     private final LogSignService logSignService;
 
+    @Operation(
+            summary = "Authorization/Login",
+            description = "check if access token is right")
     @PostMapping(value = "/login")
     public ResponseEntity login(HttpServletRequest request) {
         return logSignService.login((String) request.getAttribute("loginRes"));
     }
 
+    @Operation(
+            summary = "Registration/Signup",
+            description = "save login and credentials")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserProfileDto signUp) {
         return logSignService.registerUser(signUp);

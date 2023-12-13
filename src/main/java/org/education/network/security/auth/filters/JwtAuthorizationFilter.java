@@ -1,5 +1,6 @@
 package org.education.network.security.auth.filters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +12,6 @@ import org.education.network.service.dbService.UserService;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.LoginRes;
-import org.education.network.service.JsonServices;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -27,9 +27,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final JsonServices json;
     private final UserService userService;
     private final FilterProperties properties;
+    private final ObjectMapper mapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -70,7 +70,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     public UserDto toUser(HttpServletRequest request) throws IOException {
         String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
-        return json.getObject(requestData, UserDto.class);
+        return mapper.readValue(requestData, UserDto.class);
     }
 
 }
