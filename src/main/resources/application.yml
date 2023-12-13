@@ -29,3 +29,8 @@ properties:
     backImgLink: backImg/
     avatarLink: avatar/
     bucket: buck-avatar
+
+
+springdoc:
+  api-docs:
+    path: /api-docs

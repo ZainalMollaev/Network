@@ -20,7 +20,7 @@ public class LogSignService {
     private final JsonServices json;
 
     public ResponseEntity login(String request) {
-        CommonResponse response = (CommonResponse) json.getObject(request, CommonResponse.class);
+        CommonResponse response = json.getObject(request, CommonResponse.class);
         return ResponseEntity.ok(response);
     }
 

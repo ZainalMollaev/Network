@@ -1,4 +1,4 @@
-package org.education.network.security.auth;
+package org.education.network.configuration;
 
 import org.education.network.security.auth.filters.JwtAuthorizationFilter;
 import org.education.network.security.auth.filters.JwtAuthenticationFilter;
@@ -37,8 +37,9 @@ public class SecurityConfig  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize ->
                 authorize
-                        .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
+//                        .requestMatchers("/auth/**", "/swagger-ui/index.html").permitAll()
+//                        .anyRequest().authenticated()
         ).sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )

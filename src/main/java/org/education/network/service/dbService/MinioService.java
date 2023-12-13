@@ -10,13 +10,14 @@ import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.education.network.properties.MinioAppProperties;
+import org.education.network.security.exceptions.BadMinioRequestException;
+import org.education.network.security.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +26,7 @@ public class MinioService {
     private MinioClient minioClient;
     private final MinioAppProperties properties;
 
-    public void uploadFile(String photoId, InputStream file)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException{
+    public void uploadFile(String photoId, InputStream file) {
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
@@ -39,12 +39,13 @@ public class MinioService {
                             .build()
             );
         } catch (MinioException e) {
-            throw new RuntimeException(e);
+            throw new BadMinioRequestException(e);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new FileHandlerException(e);
         }
     }
 
-    public void deleteFile(String photoId)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException{
+    public void deleteFile(String photoId) {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
@@ -53,12 +54,13 @@ public class MinioService {
                             .build()
             );
         } catch (MinioException e) {
-            throw new RuntimeException(e);
+            throw new BadMinioRequestException(e);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new FileHandlerException(e);
         }
     }
 
-    public InputStream getFile(String photoId)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException{
+    public InputStream getFile(String photoId) {
         try {
             InputStream img = minioClient.getObject(
                     GetObjectArgs.builder()
@@ -68,12 +70,13 @@ public class MinioService {
             );
             return img;
         } catch (MinioException e) {
-            throw new RuntimeException(e);
+            throw new BadMinioRequestException(e);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new FileHandlerException(e);
         }
     }
 
-    public void createBucket()
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException{
+    public void createBucket() {
         try {
             boolean found =
                     minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getBucket()).build());
@@ -81,13 +84,14 @@ public class MinioService {
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(properties.getBucket()).build());
             }
         } catch (MinioException e) {
-            throw new RuntimeException(e);
+            throw new BadMinioRequestException(e);
+        } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
+            throw new FileHandlerException(e);
         }
     }
 
     @PostConstruct
-    public void init()
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+    public void init() {
         minioClient =
                 MinioClient.builder()
                         .endpoint(

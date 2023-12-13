@@ -3,6 +3,8 @@ package org.education.network.security.exceptions.handler;
 import org.education.network.security.exceptions.AuthenticationNetworkException;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.ErrorRes;
+import org.education.network.security.exceptions.BadMinioRequestException;
+import org.education.network.security.exceptions.FileHandlerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,22 @@ public class SecurityExceptionHandler {
         return ResponseEntity.status(400).body(CommonResponse.builder()
                 .hasErrors(true)
                 .body(errorResponse)
+                .build());
+    }
+
+    @ExceptionHandler(BadMinioRequestException.class)
+    protected ResponseEntity<Object> minioException(Exception ex) {
+        return ResponseEntity.status(400).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body(ex)
+                .build());
+    }
+
+    @ExceptionHandler(FileHandlerException.class)
+    protected ResponseEntity<Object> fileException(Exception ex) {
+        return ResponseEntity.status(500).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body("Internal Error")
                 .build());
     }
 

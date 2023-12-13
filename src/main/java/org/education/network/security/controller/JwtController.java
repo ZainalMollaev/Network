@@ -1,5 +1,7 @@
 package org.education.network.security.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.CommonResponse;
 import org.education.network.dto.UserDto;
@@ -15,10 +17,14 @@ import java.time.Instant;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/jwt")
+@Tag(name = "JwtController", description = "Operations with jwt")
 public class JwtController {
 
     private final JwtControllerService jwtControllerService;
 
+    @Operation(
+            summary = "get access token",
+            description = "generate access token")
     @PostMapping("/accessToken")
     public ResponseEntity getAccessToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(
@@ -30,6 +36,9 @@ public class JwtController {
         );
     }
 
+    @Operation(
+            summary = "get refresh token",
+            description = "generate refresh token and save it to postgres users")
     @PostMapping ("/refreshToken")
     public ResponseEntity getRefreshToken(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(

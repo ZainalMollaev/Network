@@ -6,14 +6,13 @@ import org.education.network.model.Media;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.MediaRepository;
 import org.education.network.model.repository.UserProfileRepository;
+import org.education.network.security.exceptions.FileHandlerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @Service
@@ -24,15 +23,17 @@ public class MediaService {
     private final UserProfileRepository profileRepository;
     private final MediaRepository mediaRepository;
 
-    public ResponseEntity getFile(String photoId)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException {
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(minioService.getFile(photoId).readAllBytes());
+    public ResponseEntity getFile(String photoId) {
+        try {
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(minioService.getFile(photoId).readAllBytes());
+        } catch (IOException e) {
+            throw new FileHandlerException(e);
+        }
     }
 
-    public ResponseEntity saveMedia(MediaDto mediaDto)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException {
+    public ResponseEntity saveMedia(MediaDto mediaDto) {
 
         UserProfile userProfile = profileRepository.findByEmail(mediaDto.getEmail());
         String id = UUID.randomUUID().toString();
@@ -43,19 +44,21 @@ public class MediaService {
         userProfile.setMedia(media);
         mediaDto.setFileId(media.getId());
         profileRepository.saveAndFlush(userProfile);
-        minioService.uploadFile(id, mediaDto.getFile().getInputStream());
+        try {
+            minioService.uploadFile(id, mediaDto.getFile().getInputStream());
+        } catch (IOException e) {
+            throw new FileHandlerException(e);
+        }
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity deleteMedia(MediaDto mediaDto)
-            throws IOException, NoSuchAlgorithmException, InvalidKeyException {
-
-        UserProfile userProfile = profileRepository.findByEmail(mediaDto.getEmail());
-        String id = userProfile.getMedia().getId();
-        minioService.deleteFile(id);
-        userProfile.setMedia(null);
-        profileRepository.flush();
-        mediaRepository.deleteAllById(id);
+    public ResponseEntity deleteMedia(MediaDto mediaDto) {
+            UserProfile userProfile = profileRepository.findByEmail(mediaDto.getEmail());
+            String id = userProfile.getMedia().getId();
+            minioService.deleteFile(id);
+            userProfile.setMedia(null);
+            profileRepository.flush();
+            mediaRepository.deleteAllById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
