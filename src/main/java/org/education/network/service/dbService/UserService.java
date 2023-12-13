@@ -1,4 +1,4 @@
-package org.education.network.service;
+package org.education.network.service.dbService;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.mapping.UserMapping;

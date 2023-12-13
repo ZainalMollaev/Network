@@ -13,7 +13,7 @@ public class JsonServices {
         gson = new Gson();
     }
 
-    public Object getObject(String json, Class clazz) {
-        return gson.fromJson(json, clazz);
+    public <T> T getObject(String json, Class clazz) {
+        return (T) gson.fromJson(json, clazz);
     }
 }

@@ -23,7 +23,7 @@ public interface UserProfileMapper {
     @Mapping(source = "title", target = "lastjob.title")
     @Mapping(source = "company", target = "lastjob.company")
     @Mapping(source = "title", target = "education.specialization")
-    @Mapping(source = "company", target = "education.university")
+    @Mapping(source = "university", target = "education.university")
     UserProfile toEntity(UserProfileDto userProfileDto);
 
     UserProfileDto toDto(UserProfile userProfile);

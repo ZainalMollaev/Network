@@ -1,9 +1,10 @@
-package org.education.network.service;
+package org.education.network.service.controllerService;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.UserDto;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.JwtDto;
+import org.education.network.service.dbService.UserService;
 import org.springframework.stereotype.Service;
 
 @Service

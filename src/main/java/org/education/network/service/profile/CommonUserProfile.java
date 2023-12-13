@@ -1,4 +1,4 @@
-package org.education.network.service;
+package org.education.network.service.profile;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.UserProfileDto;
@@ -10,24 +10,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserProfileService {
+public class CommonUserProfile {
 
     private final UserProfileRepository profileRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserProfileMapper profileMapper;
 
-    public void deleteAvatar(String email){
-        profileRepository.deleteAvatarByEmail(email);
-    }
-
-    public void updateAvatar(String email) {
-        profileRepository.updateAvatarByEmail(email, "avatar/"+email);
-    }
-
     public void saveUserProfile(UserProfileDto user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserProfile userAndProfile = profileMapper.toEntity(user);
-
         profileRepository.save(userAndProfile);
     }
 

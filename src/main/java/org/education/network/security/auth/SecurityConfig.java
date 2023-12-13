@@ -2,7 +2,7 @@ package org.education.network.security.auth;
 
 import org.education.network.security.auth.filters.JwtAuthorizationFilter;
 import org.education.network.security.auth.filters.JwtAuthenticationFilter;
-import org.education.network.service.CustomUserDetailsService;
+import org.education.network.service.authService.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

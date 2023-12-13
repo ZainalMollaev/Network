@@ -25,6 +25,7 @@ import org.education.network.model.profile.embedded.LastJob;
 import org.education.network.model.profile.embedded.PersonMain;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -45,8 +46,8 @@ public class UserProfile {
     @Embedded
     private Education education;
     private String location;
-    private String avatar;
-    private String backPhoto;
+    private UUID avatar;
+    private UUID backPhoto;
     @Column(unique = true, nullable = false)
     private String phoneNumber;
 
