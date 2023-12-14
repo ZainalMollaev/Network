@@ -1,8 +1,8 @@
 package org.education.network.security.exceptions.handler;
 
 import org.education.network.security.exceptions.AuthenticationNetworkException;
-import org.education.network.dto.CommonResponse;
-import org.education.network.dto.ErrorRes;
+import org.education.network.dto.response.CommonResponse;
+import org.education.network.dto.response.ErrorRes;
 import org.education.network.security.exceptions.BadMinioRequestException;
 import org.education.network.security.exceptions.FileHandlerException;
 import org.education.network.security.exceptions.JwtException;

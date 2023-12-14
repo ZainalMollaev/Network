@@ -1,4 +1,4 @@
-package org.education.network.dto;
+package org.education.network.dto.bd;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

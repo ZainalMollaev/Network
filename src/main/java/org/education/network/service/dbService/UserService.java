@@ -3,7 +3,7 @@ package org.education.network.service.dbService;
 import lombok.RequiredArgsConstructor;
 import org.education.network.mapping.UserMapping;
 import org.education.network.model.User;
-import org.education.network.dto.UserDto;
+import org.education.network.dto.bd.UserDto;
 import org.education.network.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

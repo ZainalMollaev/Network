@@ -6,14 +6,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.UserDto;
+import org.education.network.dto.bd.UserDto;
 import org.education.network.properties.FilterProperties;
 import org.education.network.security.exceptions.AuthenticationNetworkException;
 import org.education.network.security.exceptions.RequestBodyHandlerException;
 import org.education.network.service.dbService.UserService;
 import org.education.network.security.auth.JwtUtil;
-import org.education.network.dto.CommonResponse;
-import org.education.network.dto.LoginRes;
+import org.education.network.dto.response.CommonResponse;
+import org.education.network.dto.response.LoginRes;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
@@ -74,7 +74,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return !request.getRequestURI().equals(properties.getLoginUrl());
     }
 
-    public UserDto toUser(HttpServletRequest request) {
+    private UserDto toUser(HttpServletRequest request) {
         try {
             String requestData = new ContentCachingRequestWrapper(request).getReader().lines().collect(Collectors.joining());
             return mapper.readValue(requestData, UserDto.class);

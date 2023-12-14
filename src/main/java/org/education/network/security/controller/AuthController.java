@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.UserProfileDto;
+import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.service.controllerService.LogSignService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

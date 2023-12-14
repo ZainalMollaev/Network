@@ -2,7 +2,7 @@ package org.education.network.security.auth;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.education.network.dto.UserDto;
+import org.education.network.dto.bd.UserDto;
 import org.education.network.security.exceptions.JwtException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;

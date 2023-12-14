@@ -1,7 +1,7 @@
 package org.education.network.mapping;
 
 import org.education.network.model.User;
-import org.education.network.dto.UserDto;
+import org.education.network.dto.bd.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

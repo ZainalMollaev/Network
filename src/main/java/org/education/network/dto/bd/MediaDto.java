@@ -1,4 +1,4 @@
-package org.education.network.dto;
+package org.education.network.dto.bd;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,19 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Builder
 public class MediaDto {
-
-    private MultipartFile file;
-    private String email;
     private String fileId;
     private String fileType;
 
+    @Builder
+    public MediaDto(String fileId, String fileType) {
+        this.fileId = fileId;
+        this.fileType = fileType;
+    }
 }

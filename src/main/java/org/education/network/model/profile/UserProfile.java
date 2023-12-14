@@ -1,16 +1,15 @@
 package org.education.network.model.profile;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -34,7 +33,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"user"})
+@ToString(exclude = {"user", "languages"})
 @Builder
 @Entity
 public class UserProfile {
@@ -54,12 +53,14 @@ public class UserProfile {
     @Column(unique = true, nullable = false)
     private String phoneNumber;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "language", joinColumns = @JoinColumn(name = "user_profile_id"))
-    @Column(name = "name")
-    private List<String> languages;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_profile_language",
+            joinColumns = @JoinColumn(name = "user_profile_id"),
+            inverseJoinColumns = @JoinColumn(name = "language_id"))
+    private List<Language> languages;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
@@ -68,4 +69,5 @@ public class UserProfile {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "media_id", referencedColumnName = "id")
     private Media media;
+
 }
