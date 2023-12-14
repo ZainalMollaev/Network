@@ -1,4 +1,4 @@
-package org.education.network.dto;
+package org.education.network.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

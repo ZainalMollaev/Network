@@ -1,7 +1,7 @@
 package org.education.network.service.dbService;
 
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.MediaDto;
+import org.education.network.dto.request.MediaRequestDto;
 import org.education.network.model.Media;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.MediaRepository;
@@ -33,27 +33,27 @@ public class MediaService {
         }
     }
 
-    public ResponseEntity saveMedia(MediaDto mediaDto) {
+    public ResponseEntity saveMedia(MediaRequestDto mediaRequestDto) {
 
-        UserProfile userProfile = profileRepository.findByEmail(mediaDto.getEmail());
+        UserProfile userProfile = profileRepository.findByEmail(mediaRequestDto.getEmail());
         String id = UUID.randomUUID().toString();
         Media media = Media.builder()
                 .id(id)
-                .fileType(mediaDto.getFileType())
+                .fileType(mediaRequestDto.getFileType())
                 .build();
         userProfile.setMedia(media);
-        mediaDto.setFileId(media.getId());
+        mediaRequestDto.setFileId(media.getId());
         profileRepository.saveAndFlush(userProfile);
         try {
-            minioService.uploadFile(id, mediaDto.getFile().getInputStream());
+            minioService.uploadFile(id, mediaRequestDto.getFile().getInputStream());
         } catch (IOException e) {
             throw new FileHandlerException(e);
         }
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity deleteMedia(MediaDto mediaDto) {
-            UserProfile userProfile = profileRepository.findByEmail(mediaDto.getEmail());
+    public ResponseEntity deleteMedia(MediaRequestDto mediaRequestDto) {
+            UserProfile userProfile = profileRepository.findByEmail(mediaRequestDto.getEmail());
             String id = userProfile.getMedia().getId();
             minioService.deleteFile(id);
             userProfile.setMedia(null);
@@ -62,13 +62,13 @@ public class MediaService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
     public ResponseEntity getFileId(String email) {
         UserProfile userProfile = profileRepository.findByEmail(email);
-        String id = userProfile.getMedia().getId();
+        String fileId = userProfile.getMedia().getId();
 
-        return ResponseEntity.ok(MediaDto.builder()
-                        .fileId(id)
-                        .build());
+        return ResponseEntity.ok(MediaRequestDto.builder()
+                        .fileId(fileId)
+                .build());
     }
+
 }

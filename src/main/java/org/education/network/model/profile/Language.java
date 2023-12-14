@@ -1,11 +1,11 @@
 package org.education.network.model.profile;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,28 +24,13 @@ import java.io.Serializable;
 @Entity
 public class Language {
 
-    @EmbeddedId
-    private LanguageId languageId;
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(unique = true, nullable = false)
+    private String name;
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @ToString
-    @Builder
-    @Embeddable
-    public static class LanguageId implements Serializable {
-
-        private static final long serialVersionUID = 1234567L;
-
-        @Column(name = "user_profile_id")
-        private Long id;
-        private String name;
-
-    }
-
-    @OneToOne
-    @MapsId("id")
-    private UserProfile userProfile;
+    @ManyToMany(mappedBy = "languages")
+    private List<UserProfile> userProfile;
 
 }

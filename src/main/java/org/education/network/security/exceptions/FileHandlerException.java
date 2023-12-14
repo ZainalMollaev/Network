@@ -1,6 +1,6 @@
 package org.education.network.security.exceptions;
 
-public class FileHandlerException extends RuntimeException{
+public class FileHandlerException extends RuntimeException {
 
     public FileHandlerException(String message) {
         super(message);

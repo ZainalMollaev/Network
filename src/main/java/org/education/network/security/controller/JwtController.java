@@ -3,9 +3,9 @@ package org.education.network.security.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.CommonResponse;
-import org.education.network.dto.UserDto;
-import org.education.network.service.controllerService.JwtControllerService;
+import org.education.network.dto.response.CommonResponse;
+import org.education.network.dto.bd.UserDto;
+import org.education.network.service.controllerService.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ import java.time.Instant;
 @Tag(name = "JwtController", description = "Operations with jwt")
 public class JwtController {
 
-    private final JwtControllerService jwtControllerService;
+    private final JwtService jwtService;
 
     @Operation(
             summary = "get access token",
@@ -30,7 +30,7 @@ public class JwtController {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(true)
-                        .body(jwtControllerService.updateAccess(userDto))
+                        .body(jwtService.updateAccess(userDto))
                         .createdAt(Instant.now().toString())
                         .build()
         );
@@ -44,7 +44,7 @@ public class JwtController {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(true)
-                        .body(jwtControllerService.updateRefresh(userDto))
+                        .body(jwtService.updateRefresh(userDto))
                         .createdAt(Instant.now().toString())
                         .build()
         );

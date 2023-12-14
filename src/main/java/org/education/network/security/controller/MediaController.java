@@ -3,7 +3,7 @@ package org.education.network.security.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.MediaDto;
+import org.education.network.dto.request.MediaRequestDto;
 import org.education.network.service.dbService.MediaService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,16 +29,16 @@ public class MediaController {
             summary = "save picture",
             description = "Save picture")
     @PostMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity savePicture(@ModelAttribute MediaDto mediaDto) {
-        return mediaService.saveMedia(mediaDto);
+    public ResponseEntity savePicture(@ModelAttribute MediaRequestDto mediaRequestDto) {
+        return mediaService.saveMedia(mediaRequestDto);
     }
 
     @Operation(
             summary = "delete picture",
             description = "delete picture")
     @DeleteMapping(value = "/picture")
-    public ResponseEntity deletePicture(@RequestBody MediaDto mediaDto) {
-        return mediaService.deleteMedia(mediaDto);
+    public ResponseEntity deletePicture(@RequestBody MediaRequestDto mediaRequestDto) {
+        return mediaService.deleteMedia(mediaRequestDto);
     }
 
     @Operation(
