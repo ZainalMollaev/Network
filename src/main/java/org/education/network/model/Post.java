@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.education.network.model.profile.UserProfile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,22 +22,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity
 @Builder
-public class Media {
+@Entity
+public class Post {
 
     @Id
     @Builder.Default
-    private UUID fileId = UUID.randomUUID();
-    private String fileType;
-    private String contentType;
+    private String id = UUID.randomUUID().toString();
+    private String title;
+    private String description;
+    private String location;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "profile_id")
+    @ManyToOne
+    @JoinColumn(name = "profile_id",
+            nullable = false)
     private UserProfile userProfile;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name ="post_id")
-    private Post post;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Media> mediaList;
 
 }

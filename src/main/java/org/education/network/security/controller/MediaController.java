@@ -44,9 +44,10 @@ public class MediaController {
     @Operation(
             summary = "get picture's id",
             description = "Get picture's id")
-    @GetMapping(value = "/picture/{email}")
-    public ResponseEntity getPictureId(@PathVariable("email") String email) {
-        return mediaService.getFileId(email);
+    @GetMapping(value = "/picture/{email}/{type}")
+    public ResponseEntity getPictureId(@PathVariable("email") String email,
+                                       @PathVariable("type") String type) {
+        return mediaService.getFileId(email, type);
     }
 
     @Operation(

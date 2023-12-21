@@ -4,10 +4,8 @@ import org.education.network.dto.bd.LanguageDto;
 import org.education.network.model.profile.Language;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
 
 @Mapper
 public interface LanguageMapper {

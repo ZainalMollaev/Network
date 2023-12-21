@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.MediaRequestDto;
 import org.education.network.model.Media;
 import org.education.network.model.profile.UserProfile;
-import org.education.network.model.repository.MediaRepository;
 import org.education.network.model.repository.UserProfileRepository;
 import org.education.network.security.exceptions.FileHandlerException;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +19,6 @@ public class MediaService {
 
     private final MinioService minioService;
     private final UserProfileRepository profileRepository;
-    private final MediaRepository mediaRepository;
 
     public ResponseEntity getFile(String photoId) {
         try {
@@ -36,16 +33,15 @@ public class MediaService {
     public ResponseEntity saveMedia(MediaRequestDto mediaRequestDto) {
 
         UserProfile userProfile = profileRepository.findByEmail(mediaRequestDto.getEmail());
-        String id = UUID.randomUUID().toString();
         Media media = Media.builder()
-                .id(id)
                 .fileType(mediaRequestDto.getFileType())
+                .contentType(mediaRequestDto.getFile().getContentType())
                 .build();
-        userProfile.setMedia(media);
-        mediaRequestDto.setFileId(media.getId());
+        userProfile.addMedia(media);
         profileRepository.saveAndFlush(userProfile);
         try {
-            minioService.uploadFile(id, mediaRequestDto.getFile().getInputStream());
+            minioService.uploadFile(media.getFileId().toString(),
+                    mediaRequestDto.getFile().getInputStream());
         } catch (IOException e) {
             throw new FileHandlerException(e);
         }
@@ -53,21 +49,35 @@ public class MediaService {
     }
 
     public ResponseEntity deleteMedia(MediaRequestDto mediaRequestDto) {
-            UserProfile userProfile = profileRepository.findByEmail(mediaRequestDto.getEmail());
-            String id = userProfile.getMedia().getId();
-            minioService.deleteFile(id);
-            userProfile.setMedia(null);
-            profileRepository.flush();
-            mediaRepository.deleteAllById(id);
+        UserProfile userProfile = profileRepository.findByEmail(mediaRequestDto.getEmail());
+
+        Media file = userProfile.getMedia()
+                .stream()
+                .filter(
+                        i -> i.getFileId().toString().equals(mediaRequestDto.getFileId()))
+                .findFirst()
+                .get();
+
+        minioService.deleteFile(file.getFileId().toString());
+        userProfile.deleteMedia(file);
+        profileRepository.flush();
+
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    public ResponseEntity getFileId(String email) {
+    public ResponseEntity getFileId(String email, String type) {
         UserProfile userProfile = profileRepository.findByEmail(email);
-        String fileId = userProfile.getMedia().getId();
+        String id = userProfile.getMedia()
+                .stream()
+                .filter(
+                        i -> i.getFileType().equals(type))
+                .findFirst()
+                .get()
+                .getFileId()
+                .toString();
 
         return ResponseEntity.ok(MediaRequestDto.builder()
-                        .fileId(fileId)
+                        .fileId(id)
                 .build());
     }
 
