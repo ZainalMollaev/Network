@@ -29,6 +29,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -80,5 +81,29 @@ public class UserProfile {
     public void deleteMedia(Media media) {
         this.media.remove(media);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserProfile profile = (UserProfile) o;
+        return Objects.equals(id, profile.id)
+                && Objects.equals(personMain.getName(), profile.personMain.getName())
+                && Objects.equals(personMain.getLastname(), profile.personMain.getLastname())
+                && Objects.equals(personMain.getBirthDate(), profile.personMain.getBirthDate())
+                && Objects.equals(lastjob.getCompany(), profile.lastjob.getCompany())
+                && Objects.equals(lastjob.getTitle(), profile.lastjob.getTitle())
+                && Objects.equals(education.getSpecialization(), profile.education.getSpecialization())
+                && Objects.equals(education.getUniversity(), profile.education.getUniversity())
+                && Objects.equals(location, profile.location)
+                && Objects.equals(phoneNumber, profile.phoneNumber)
+                && Objects.equals(languages, profile.languages);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, personMain, lastjob, education, location, phoneNumber, languages, posts, user, media);
+    }
+
 
 }

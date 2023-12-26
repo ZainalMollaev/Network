@@ -1,6 +1,5 @@
 package org.education.network.service.controllerService;
 
-
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.PostDto;
 import org.education.network.dto.response.CommonResponse;
@@ -37,10 +36,12 @@ public class PostService {
 
         for (MultipartFile file :
                 postDto.getFiles()) {
+
             Media post1 = Media.builder()
                     .post(post)
                     .fileType("post")
                     .build();
+
             try {
                 minioService.uploadFile(post1.getFileId().toString(), file.getInputStream());
                 mediaRepository.save(post1);

@@ -3,6 +3,7 @@ package org.education.network.security.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.education.network.MediaTypes;
 import org.education.network.dto.request.MediaRequestDto;
 import org.education.network.service.dbService.MediaService;
 import org.springframework.http.MediaType;
@@ -46,7 +47,7 @@ public class MediaController {
             description = "Get picture's id")
     @GetMapping(value = "/picture/{email}/{type}")
     public ResponseEntity getPictureId(@PathVariable("email") String email,
-                                       @PathVariable("type") String type) {
+                                       @PathVariable("type") MediaTypes type) {
         return mediaService.getFileId(email, type);
     }
 
