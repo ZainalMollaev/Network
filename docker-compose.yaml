@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  network-data:
+    image: postgres:16
+    container_name: network-data
+    restart: always
+    environment:
+      POSTGRES_USER: network
+      POSTGRES_PASSWORD: network
+      POSTGRES_DB: network
+      STOP_ON_MIGRATION_FAILURE: "false"
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/netdata
+    healthcheck:
+      test: PGPASSWORD=network psql -d network -U network -w -c '\q'
+      interval: 20s
+      timeout: 10s
+
+  minio:
+    image: minio/minio:RELEASE.2023-12-07T04-16-00Z
+    volumes:
+      - ./data:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: 'minio_user'
+      MINIO_ROOT_PASSWORD: 'minio_password'
+      MINIO_ADDRESS: ':9000'
+      MINIO_CONSOLE_ADDRESS: ':9001'
+    command: minio server /data
+
+networks:
+  minionetwork:
+    driver: bridge
+
+volumes:
+  minio_data:
+    driver: local
