@@ -21,7 +21,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "fileList")
 @Builder
 @Entity
 public class Post {
@@ -39,6 +39,6 @@ public class Post {
     private UserProfile userProfile;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Media> mediaList;
+    private List<File> fileList;
 
 }

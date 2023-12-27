@@ -19,7 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.model.Media;
+import org.education.network.model.File;
 import org.education.network.model.Post;
 import org.education.network.model.User;
 import org.education.network.model.profile.embedded.Education;
@@ -34,7 +34,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"media", "languages", "posts"})
+@ToString(exclude = {"files", "languages", "posts"})
 @Builder
 @Entity
 public class UserProfile {
@@ -70,15 +70,15 @@ public class UserProfile {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Media> media;
+    private List<File> files;
 
-    public void addMedia(Media media) {
-        media.setUserProfile(this);
-        this.media.add(media);
+    public void addMedia(File file) {
+        file.setUserProfile(this);
+        this.files.add(file);
     }
 
-    public void deleteMedia(Media media) {
-        this.media.remove(media);
+    public void deleteMedia(File file) {
+        this.files.remove(file);
     }
 
 }

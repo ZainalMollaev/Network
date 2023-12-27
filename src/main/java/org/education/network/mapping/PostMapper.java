@@ -1,12 +1,11 @@
 package org.education.network.mapping;
 
 import org.education.network.dto.request.PostDto;
-import org.education.network.model.Media;
+import org.education.network.model.File;
 import org.education.network.model.Post;
 import org.education.network.model.profile.UserProfile;
-import org.education.network.model.repository.MediaRepository;
 import org.education.network.model.repository.UserProfileRepository;
-import org.education.network.service.dbService.MinioService;
+import org.education.network.service.dbService.FileService;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,12 +21,11 @@ import java.util.List;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public abstract class PostMapper {
 
+
     @Autowired
-    protected MinioService minioService;
+    private UserProfileRepository repository;
     @Autowired
-    protected UserProfileRepository repository;
-    @Autowired
-    protected MediaRepository mediaRepository;
+    private FileService fileService;
 
     public abstract List<PostDto> postDtoList(List<Post> post);
     public abstract List<Post> postList(List<PostDto> postDto);
@@ -35,23 +33,28 @@ public abstract class PostMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "description", target = "description")
     @Mapping(target = "userProfile", expression = "java(getProfile(postDto.getEmail()))")
+    @Mapping(target = "fileList", expression = "java(saveFiles(postDto))")
     public abstract Post toEntity(PostDto postDto);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "userProfile.user.email", target = "email")
-    @Mapping(target = "ids", expression = "java(getIds(post.getMediaList()))")
+    @Mapping(target = "ids", expression = "java(getIds(post.getFileList()))")
     public abstract PostDto toDto(Post post);
+
+    protected List<File> saveFiles(PostDto postDto) {
+        return fileService.saveFilesForPost(postDto);
+    }
 
     protected UserProfile getProfile(String email) {
         UserProfile profile = repository.findByEmail(email);
         return profile;
     }
 
-    protected List<String> getIds(List<Media> mediaList) {
+    protected List<String> getIds(List<File> mediaList) {
         List<String> fileList = new ArrayList<>();
-        for (Media media: mediaList) {
-            fileList.add(media.getFileId().toString());
+        for (File file : mediaList) {
+            fileList.add(file.getFileId().toString());
         }
 
         return fileList;

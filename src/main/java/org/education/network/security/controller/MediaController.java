@@ -3,8 +3,8 @@ package org.education.network.security.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.request.MediaRequestDto;
-import org.education.network.service.dbService.MediaService;
+import org.education.network.dto.request.FileDto;
+import org.education.network.service.dbService.FileService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,22 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "MediaController", description = "CRUD of media")
 public class MediaController {
 
-    private final MediaService mediaService;
+    private final FileService fileService;
 
     @Operation(
             summary = "save picture",
             description = "Save picture")
     @PostMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity savePicture(@ModelAttribute MediaRequestDto mediaRequestDto) {
-        return mediaService.saveMedia(mediaRequestDto);
+    public ResponseEntity savePicture(@ModelAttribute FileDto fileDto) {
+        return fileService.saveAvatarOrBack(fileDto);
     }
 
     @Operation(
             summary = "delete picture",
             description = "delete picture")
     @DeleteMapping(value = "/picture")
-    public ResponseEntity deletePicture(@RequestBody MediaRequestDto mediaRequestDto) {
-        return mediaService.deleteMedia(mediaRequestDto);
+    public ResponseEntity deletePicture(@RequestBody FileDto fileDto) {
+        return fileService.deleteFile(fileDto);
     }
 
     @Operation(
@@ -47,7 +47,7 @@ public class MediaController {
     @GetMapping(value = "/picture/{email}/{type}")
     public ResponseEntity getPictureId(@PathVariable("email") String email,
                                        @PathVariable("type") String type) {
-        return mediaService.getFileId(email, type);
+        return fileService.getFileId(email, type);
     }
 
     @Operation(
@@ -55,7 +55,7 @@ public class MediaController {
             description = "Get picture itself")
     @GetMapping(value = "/picture")
     public ResponseEntity getPicture(@RequestParam("fileId") String fileId) {
-        return mediaService.getFile(fileId);
+        return fileService.getFile(fileId);
     }
 
 }

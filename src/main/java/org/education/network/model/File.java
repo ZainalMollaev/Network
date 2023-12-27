@@ -22,13 +22,12 @@ import java.util.UUID;
 @ToString
 @Entity
 @Builder
-public class Media {
+public class File {
 
     @Id
     @Builder.Default
-    private UUID fileId = UUID.randomUUID();
+    private String fileId = UUID.randomUUID().toString();
     private String fileType;
-    private String contentType;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "profile_id")
