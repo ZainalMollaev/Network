@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -29,4 +30,16 @@ public class PersonMain {
     @Column(nullable = false)
     private boolean gender;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonMain that = (PersonMain) o;
+        return gender == that.gender && Objects.equals(name, that.name) && Objects.equals(lastname, that.lastname) && Objects.equals(birthDate, that.birthDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, lastname, birthDate, gender);
+    }
 }

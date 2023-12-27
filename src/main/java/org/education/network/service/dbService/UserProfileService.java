@@ -17,7 +17,6 @@ public class UserProfileService {
     private final UserProfileMapper profileMapper;
 
     public void saveUserProfile(UserProfileDto user) {
-
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserProfile userAndProfile = profileMapper.toEntity(user);
         profileRepository.save(userAndProfile);
