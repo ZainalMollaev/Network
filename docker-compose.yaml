@@ -1,0 +1,82 @@
+version: '3'
+
+services:
+
+  network-data:
+      image: postgres:16
+      container_name: network-data
+      restart: always
+      environment:
+        POSTGRES_USER: network
+        POSTGRES_PASSWORD: network
+        POSTGRES_DB: network
+        STOP_ON_MIGRATION_FAILURE: "false"
+      ports:
+        - "5432:5432"
+      expose:
+        - 5432
+      volumes:
+        - ./data:/var/lib/postgresql/netdata
+      healthcheck:
+        test: PGPASSWORD=network psql -d network -U network -w -c '\q'
+        interval: 20s
+        timeout: 10s
+
+  minio:
+    container_name: minio
+    image: minio/minio:RELEASE.2023-12-07T04-16-00Z
+    volumes:
+      - ./data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    expose:
+      - 9000
+      - 9001
+    environment:
+      MINIO_ROOT_USER: 'minio_user'
+      MINIO_ROOT_PASSWORD: 'minio_password'
+      MINIO_ADDRESS: ':9000'
+      MINIO_CONSOLE_ADDRESS: ':9001'
+    command: minio server /data
+
+  java:
+    ports:
+      - "8080:8080"
+    image: 'network-java:latest'
+    container_name: java
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/network
+      SPRING_DATASOURCE_USERNAME: network
+      SPRING_DATASOURCE_PASSWORD: network
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      FLYWAY_LOCATIONS: classpath:db/migration
+      FLYWAY_ENABLED: true
+      FLYWAY_BASELINE-ON-MIGRATE: true
+      PROPERTIES_FILTER_ATTRIBUTENAME: loginRes
+      PROPERTIES_FILTER_LOGINURL: /auth/login
+      PROPERTIES_MINIO_HOST: http://minio
+      PROPERTIES_MINIO_PORT: 9000
+      PROPERTIES_MINIO_SECURE: false
+      PROPERTIES_MINIO_JPEGTYPE: image/jpeg
+      PROPERTIES_MINIO_ACCESSTOKEN: TQE5viifimaaSC6iSYhA
+      PROPERTIES_MINIO_SECRETTOKEN: e9c8lPtMLbYgdYkcOGNcQxN3Y1mIdWQCvkwlDfVi
+      PROPERTIES_MINIO_BACKIMGLINK: backImg/
+      PROPERTIES_MINIO_AVATARLINK: avatar/
+      PROPERTIES_MINIO_BUCKET: buck-avatar
+    depends_on:
+      - "network-data"
+      - "minio"
+
+networks:
+  minionetwork:
+    driver: bridge
+
+volumes:
+  minio_data:
+    driver: local
