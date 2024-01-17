@@ -17,6 +17,7 @@ public class CommonResponse <T>{
 
     private boolean hasErrors;
     private T body;
+    @Builder.Default
     private String createdAt = Instant.now().toString();
 
     @Override
@@ -27,4 +28,5 @@ public class CommonResponse <T>{
                 ", \"localDateTime\" : \"" + createdAt + "\" " +
                 "}";
     }
+
 }
