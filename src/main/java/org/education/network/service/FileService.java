@@ -1,14 +1,12 @@
-package org.education.network.service.dbService;
+package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.FileDto;
 import org.education.network.dto.request.PostDto;
-import org.education.network.model.File;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
 import org.education.network.security.exceptions.FileHandlerException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,17 +20,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
 
+    //todo ошибка если пытаются добавить файл а пользователя такого нет
+
     private final MinioService minioService;
     private final UserProfileRepository profileRepository;
 
-    public ResponseEntity getFile(String photoId) {
+    public byte[] getFile(String photoId) {
         try {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(minioService.getFile(photoId).readAllBytes());
+            return minioService.getFile(photoId).readAllBytes();
         } catch (IOException e) {
             throw new FileHandlerException(e);
         }
+    }
+
+    public List<byte[]> getFiveFilesOfUser() {
+
+        return new ArrayList<>();
     }
 
     public List<File> saveFilesForPost(PostDto postDto) {

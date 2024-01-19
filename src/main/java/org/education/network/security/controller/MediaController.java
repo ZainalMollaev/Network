@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.FileDto;
-import org.education.network.service.dbService.FileService;
+import org.education.network.service.FileService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,7 +55,10 @@ public class MediaController {
             description = "Get picture itself")
     @GetMapping(value = "/picture")
     public ResponseEntity getPicture(@RequestParam("fileId") String fileId) {
-        return fileService.getFile(fileId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(fileService.getFile(fileId));
+
     }
 
 }

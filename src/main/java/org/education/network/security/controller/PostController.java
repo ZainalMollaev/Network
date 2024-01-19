@@ -3,7 +3,7 @@ package org.education.network.security.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.PostDto;
-import org.education.network.service.controllerService.PostService;
+import org.education.network.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;

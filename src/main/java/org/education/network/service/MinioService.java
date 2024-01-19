@@ -1,4 +1,4 @@
-package org.education.network.service.dbService;
+package org.education.network.service;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;

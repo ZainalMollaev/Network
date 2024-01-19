@@ -1,8 +1,7 @@
-package org.education.network.service.authService;
+package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserDto;
-import org.education.network.service.dbService.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;

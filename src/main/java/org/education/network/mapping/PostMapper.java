@@ -1,11 +1,10 @@
 package org.education.network.mapping;
 
 import org.education.network.dto.request.PostDto;
-import org.education.network.model.File;
 import org.education.network.model.Post;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
-import org.education.network.service.dbService.FileService;
+import org.education.network.service.FileService;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

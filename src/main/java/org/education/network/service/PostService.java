@@ -1,4 +1,4 @@
-package org.education.network.service.controllerService;
+package org.education.network.service;
 
 
 import lombok.RequiredArgsConstructor;

@@ -1,12 +1,10 @@
-package org.education.network.service.controllerService;
+package org.education.network.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.bd.UserProfileDto;
-import org.education.network.service.dbService.UserProfileService;
-import org.education.network.service.dbService.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
