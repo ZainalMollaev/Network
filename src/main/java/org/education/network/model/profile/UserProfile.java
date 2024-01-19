@@ -63,6 +63,8 @@ public class UserProfile {
     private String location;
     @Column(unique = true, nullable = false)
     private String phoneNumber;
+    private String avatarLink;
+    private String backimgLink;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

@@ -32,31 +32,16 @@ public abstract class PostMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "description", target = "description")
     @Mapping(target = "userProfile", expression = "java(getProfile(postDto.getEmail()))")
-    @Mapping(target = "fileList", expression = "java(saveFiles(postDto))")
     public abstract Post toEntity(PostDto postDto);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "userProfile.user.email", target = "email")
-    @Mapping(target = "ids", expression = "java(getIds(post.getFileList()))")
     public abstract PostDto toDto(Post post);
-
-    protected List<File> saveFiles(PostDto postDto) {
-        return fileService.saveFilesForPost(postDto);
-    }
 
     protected UserProfile getProfile(String email) {
         UserProfile profile = repository.findByEmail(email);
         return profile;
-    }
-
-    protected List<String> getIds(List<File> mediaList) {
-        List<String> fileList = new ArrayList<>();
-        for (File file : mediaList) {
-            fileList.add(file.getFileId().toString());
-        }
-
-        return fileList;
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

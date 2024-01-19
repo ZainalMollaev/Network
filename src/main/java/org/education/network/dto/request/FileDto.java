@@ -16,9 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class FileDto {
 
-    private String fileId;
-    private String fileType;
     private MultipartFile file;
-    private String email;
-    private String postId;
+
 }

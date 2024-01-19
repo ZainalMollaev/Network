@@ -58,7 +58,6 @@ public class MediaController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(fileService.getFile(fileId));
-
     }
 
 }

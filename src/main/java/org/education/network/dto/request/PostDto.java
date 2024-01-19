@@ -22,6 +22,6 @@ public class PostDto {
     private String description;
     private String email;
     private String location;
-    private List<MultipartFile> files;
-    private List<String> ids;
+    private List<FileDto> files;
+
 }
