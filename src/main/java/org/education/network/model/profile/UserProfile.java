@@ -67,10 +67,10 @@ public class UserProfile {
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
     @JoinTable(name="tbl_subscribers",
-            joinColumns=@JoinColumn(name="userId"),
-            inverseJoinColumns=@JoinColumn(name="subscriberId"),
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="subscriber_id"),
             uniqueConstraints = {
-                    @UniqueConstraint(columnNames = { "userId", "subscriberId" })}
+                    @UniqueConstraint(columnNames = { "user_id", "subscriber_id" })}
     )
     @Builder.Default
     private Set<UserProfile> subscribes = new HashSet<>();

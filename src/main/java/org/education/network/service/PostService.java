@@ -24,12 +24,9 @@ public class PostService {
     private final FileService fileService;
 
     public ResponseEntity createPost(PostDto postDto) {
+        Post savedPost = postRepository.save(postMapper.toEntity(postDto));
 
-        Post post = postMapper.toEntity(postDto);
-
-        fileService.saveFile("posts", post.getId(), postDto.getFiles());
-
-        postRepository.save(post);
+        fileService.saveFile("posts", savedPost.getId(), postDto.getFiles());
 
         return ResponseEntity.ok().build();
     }

@@ -2,7 +2,7 @@ package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.DeleteMediaDto;
-import org.education.network.security.exceptions.FileHandlerException;
+import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,12 +1,12 @@
-package org.education.network.security.exceptions.handler;
+package org.education.network.web.exceptions.handler;
 
-import org.education.network.security.exceptions.AuthenticationNetworkException;
+import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.response.ErrorRes;
-import org.education.network.security.exceptions.BadMinioRequestException;
-import org.education.network.security.exceptions.FileHandlerException;
-import org.education.network.security.exceptions.JwtException;
-import org.education.network.security.exceptions.RequestBodyHandlerException;
+import org.education.network.web.exceptions.BadMinioRequestException;
+import org.education.network.web.exceptions.FileHandlerException;
+import org.education.network.web.exceptions.JwtException;
+import org.education.network.web.exceptions.RequestBodyHandlerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

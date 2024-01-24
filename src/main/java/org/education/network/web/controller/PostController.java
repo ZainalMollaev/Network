@@ -1,4 +1,4 @@
-package org.education.network.security.controller;
+package org.education.network.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

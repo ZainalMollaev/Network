@@ -1,4 +1,4 @@
-package org.education.network.security.exceptions;
+package org.education.network.web.exceptions;
 
 public class SecurityFilterChainException extends RuntimeException{
 

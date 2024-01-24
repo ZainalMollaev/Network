@@ -10,8 +10,8 @@ import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.education.network.properties.MinioAppProperties;
-import org.education.network.security.exceptions.BadMinioRequestException;
-import org.education.network.security.exceptions.FileHandlerException;
+import org.education.network.web.exceptions.BadMinioRequestException;
+import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
