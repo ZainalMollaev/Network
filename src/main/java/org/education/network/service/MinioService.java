@@ -26,18 +26,20 @@ public class MinioService {
     private MinioClient minioClient;
     private final MinioAppProperties properties;
 
-    public void uploadFile(String photoId, InputStream file) {
+    public void uploadFile(String bucket, String filePath, InputStream file) {
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
-                            .bucket(properties.getBucket())
+                            .bucket(bucket)
                             .stream(file,
                                     file.available(),
                                     -1)
                             .contentType(properties.getJpegType())
-                            .object(photoId)
+                            .object(filePath)
                             .build()
             );
+
+
         } catch (MinioException e) {
             throw new BadMinioRequestException(e);
         } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
@@ -45,12 +47,12 @@ public class MinioService {
         }
     }
 
-    public void deleteFile(String photoId) {
+    public void deleteFile(String bucket, String fileId) {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
-                            .bucket(properties.getBucket())
-                            .object(photoId)
+                            .bucket(bucket)
+                            .object(fileId)
                             .build()
             );
         } catch (MinioException e) {
@@ -78,10 +80,15 @@ public class MinioService {
 
     public void createBucket() {
         try {
-            boolean found =
-                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getBucket()).build());
-            if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(properties.getBucket()).build());
+            boolean foundPerson =
+                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getUserBucket()).build());
+            boolean foundPost =
+                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getPostBucket()).build());
+            if (!foundPerson) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(properties.getUserBucket()).build());
+            }
+            if (!foundPost) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(properties.getPostBucket()).build());
             }
         } catch (MinioException e) {
             throw new BadMinioRequestException(e);

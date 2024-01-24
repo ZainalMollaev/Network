@@ -5,15 +5,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
-import jakarta.persistence.NamedAttributeNode;
-import jakarta.persistence.NamedEntityGraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.UniqueConstraint;
@@ -34,14 +30,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
-
-@NamedEntityGraph(
-        name = "user-subscriptions-entity-graph",
-        attributeNodes = {
-                @NamedAttributeNode(value = "subscribes"),
-        }
-)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -52,8 +42,8 @@ import java.util.Set;
 public class UserProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Builder.Default
+    private String id = UUID.randomUUID().toString();
     @Embedded
     private PersonMain personMain;
     @Embedded
@@ -63,8 +53,6 @@ public class UserProfile {
     private String location;
     @Column(unique = true, nullable = false)
     private String phoneNumber;
-    private String avatarLink;
-    private String backimgLink;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -87,7 +75,7 @@ public class UserProfile {
     @Builder.Default
     private Set<UserProfile> subscribes = new HashSet<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;

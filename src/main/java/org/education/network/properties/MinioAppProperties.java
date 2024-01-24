@@ -18,5 +18,7 @@ public class MinioAppProperties {
     private boolean secure;
     private int port;
     private String jpegType;
+    private String userBucket;
+    private String postBucket;
 
 }

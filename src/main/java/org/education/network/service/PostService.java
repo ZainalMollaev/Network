@@ -2,29 +2,32 @@ package org.education.network.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.request.PostDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.mapping.PostMapper;
 import org.education.network.model.Post;
 import org.education.network.model.repository.PostRepository;
-import org.education.network.model.repository.UserProfileRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
-    private final UserProfileRepository profileRepository;
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final FileService fileService;
 
     public ResponseEntity createPost(PostDto postDto) {
 
         Post post = postMapper.toEntity(postDto);
+
+        fileService.saveFile("posts", post.getId(), postDto.getFiles());
 
         postRepository.save(post);
 
@@ -52,4 +55,13 @@ public class PostService {
                 .build());
     }
 
+    public ResponseEntity deleteFile(DeleteMediaDto deleteMediaDto) {
+
+        fileService.deleteFile(Collections.singletonList(deleteMediaDto));
+
+        return ResponseEntity.ok(CommonResponse.builder()
+                        .hasErrors(false)
+                        .body(deleteMediaDto.getFileName() + " successfully deleted")
+                .build());
+    }
 }
