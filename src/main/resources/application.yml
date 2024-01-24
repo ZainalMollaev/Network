@@ -10,6 +10,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: validate
+    show-sql: true
   flyway:
     locations: classpath:db/migration
     enabled: true
@@ -28,7 +29,8 @@ properties:
     secretToken: e9c8lPtMLbYgdYkcOGNcQxN3Y1mIdWQCvkwlDfVi
     backImgLink: backImg/
     avatarLink: avatar/
-    bucket: buck-avatar
+    userBucket: users
+    postBucket: posts
 
 
 springdoc:
