@@ -2,11 +2,14 @@ package org.education.network.service;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
+import io.minio.ListObjectsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.Result;
 import io.minio.errors.MinioException;
+import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.education.network.properties.MinioAppProperties;
@@ -78,7 +81,13 @@ public class MinioService {
         }
     }
 
-    public void createBucket() {
+    public Iterable<Result<Item>> getAllObjects() {
+        return minioClient.listObjects(ListObjectsArgs.builder()
+                        .bucket(properties.getBucket())
+                .build());
+    }
+
+    private void createBucket() {
         try {
             boolean foundPerson =
                     minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getUserBucket()).build());
@@ -98,7 +107,7 @@ public class MinioService {
     }
 
     @PostConstruct
-    public void init() {
+    private void init() {
         minioClient =
                 MinioClient.builder()
                         .endpoint(

@@ -29,6 +29,7 @@ public class LogSignService {
     }
 
     public ResponseEntity<?> registerUser(UserProfileDto signUp) {
+
         if(userService.existsByEmail(signUp.getEmail())){
             return ResponseEntity.badRequest().body(CommonResponse.builder()
                     .hasErrors(false)
@@ -44,5 +45,6 @@ public class LogSignService {
                 .body("User is registered successfully!")
                 .createdAt(Instant.now().toString())
                 .build());
+
     }
 }
