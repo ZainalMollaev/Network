@@ -2,9 +2,9 @@ package org.education.network.model.repository;
 
 import org.education.network.model.profile.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
@@ -17,5 +17,10 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             "FROM UserProfile up " +
             "WHERE up.user.email = :email")
     Long getIdByEmail(String email);
+
+    @Query(value = "SELECT up.subscribes " +
+            "FROM UserProfile up " +
+            "WHERE up.user.email = :email")
+    List<UserProfile> getSubscriptionsByEmail(String email);
 
 }

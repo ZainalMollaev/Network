@@ -3,8 +3,6 @@ package org.education.network.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -17,6 +15,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.education.network.model.profile.UserProfile;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,8 +28,8 @@ import org.education.network.model.profile.UserProfile;
 public class User {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Builder.Default
+    private String id = UUID.randomUUID().toString();
     @Column(unique = true, nullable = false)
     private String email;
     @Column(unique = true, nullable = false)

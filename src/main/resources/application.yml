@@ -9,9 +9,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create
+    show-sql: true
   flyway:
-    locations: classpath:db/migration
+    locations: classpath:/db/migration
     enabled: true
     baseline-on-migrate: true
 
@@ -28,7 +29,8 @@ properties:
     secretToken: e9c8lPtMLbYgdYkcOGNcQxN3Y1mIdWQCvkwlDfVi
     backImgLink: backImg/
     avatarLink: avatar/
-    bucket: buck-avatar
+    userBucket: users
+    postBucket: posts
 
 
 springdoc:

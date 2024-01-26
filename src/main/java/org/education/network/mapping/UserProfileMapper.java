@@ -1,6 +1,7 @@
 package org.education.network.mapping;
 
 import org.education.network.dto.bd.UserProfileDto;
+import org.education.network.enumtypes.Gender;
 import org.education.network.model.profile.Language;
 import org.education.network.model.profile.UserProfile;
 import org.mapstruct.BeanMapping;
@@ -20,7 +21,7 @@ public interface UserProfileMapper {
     @Mapping(source = "name", target = "personMain.name")
     @Mapping(source = "lastname", target = "personMain.lastname")
     @Mapping(source = "birthDate", target = "personMain.birthDate")
-    @Mapping(source = "gender", target = "personMain.gender")
+    @Mapping(target = "personMain.gender", expression = "java(toGender(userProfileDto.getGender()))")
     @Mapping(source = "title", target = "lastjob.title")
     @Mapping(source = "company", target = "lastjob.company")
     @Mapping(source = "specialization", target = "education.specialization")
@@ -50,6 +51,10 @@ public interface UserProfileMapper {
         return Language.builder()
                 .name(language)
                 .build();
+    }
+
+    default Gender toGender(String gender){
+        return Gender.valueOf(gender);
     }
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

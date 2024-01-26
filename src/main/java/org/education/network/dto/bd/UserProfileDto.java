@@ -20,7 +20,7 @@ public class UserProfileDto extends UserDto{
     private String name;
     private String lastname;
     private String birthDate;
-    private boolean gender;
+    private String gender;
     private String title;
     private String company;
     private String specialization;

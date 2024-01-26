@@ -13,7 +13,7 @@
       </persistence-unit>
       <persistence-unit moduleName="Network" name="Default">
         <packages>
-          <package value="org.education.network.model.profile" />
+          <package value="org.education.network.model" />
         </packages>
       </persistence-unit>
     </persistence-units>

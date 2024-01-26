@@ -1,27 +1,26 @@
-package org.education.network.dto.request;
+package org.education.network.dto.bd;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.UUID;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @ToString
-public class PostDto {
+public class SubscriptionDto {
 
-    private UUID id;
+    private String name;
+    private String company;
     private String title;
-    private String description;
-    private String email;
     private String location;
-    private List<MultipartFile> files;
+    private List<byte[]> imgs;
 
 }

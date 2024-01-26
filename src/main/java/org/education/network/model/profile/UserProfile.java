@@ -4,8 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -13,13 +12,13 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.model.Media;
 import org.education.network.model.Post;
 import org.education.network.model.User;
 import org.education.network.model.profile.embedded.Education;
@@ -28,21 +27,23 @@ import org.education.network.model.profile.embedded.PersonMain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"media", "languages", "posts"})
+@ToString(exclude = {"subscribes", "languages", "posts"})
 @Builder
 @Entity
 public class UserProfile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Builder.Default
+    private String id = UUID.randomUUID().toString();
     @Embedded
     private PersonMain personMain;
     @Embedded
@@ -64,45 +65,25 @@ public class UserProfile {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Post> posts;
 
-    @OneToOne
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
+    @JoinTable(name="tbl_subscribers",
+            joinColumns=@JoinColumn(name="user_id"),
+            inverseJoinColumns=@JoinColumn(name="subscriber_id"),
+            uniqueConstraints = {
+                    @UniqueConstraint(columnNames = { "user_id", "subscriber_id" })}
+    )
+    @Builder.Default
+    private Set<UserProfile> subscribes = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Media> media;
+    //todo Реализовать количество подписчиков и количество подписок
 
-    public void addMedia(Media media) {
-        media.setUserProfile(this);
-        this.media.add(media);
-    }
-
-    public void deleteMedia(Media media) {
-        this.media.remove(media);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserProfile profile = (UserProfile) o;
-        return Objects.equals(id, profile.id)
-                && Objects.equals(personMain.getName(), profile.personMain.getName())
-                && Objects.equals(personMain.getLastname(), profile.personMain.getLastname())
-                && Objects.equals(personMain.getBirthDate(), profile.personMain.getBirthDate())
-                && Objects.equals(lastjob.getCompany(), profile.lastjob.getCompany())
-                && Objects.equals(lastjob.getTitle(), profile.lastjob.getTitle())
-                && Objects.equals(education.getSpecialization(), profile.education.getSpecialization())
-                && Objects.equals(education.getUniversity(), profile.education.getUniversity())
-                && Objects.equals(location, profile.location)
-                && Objects.equals(phoneNumber, profile.phoneNumber)
-                && Objects.equals(languages, profile.languages);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, personMain, lastjob, education, location, phoneNumber, languages, posts, user, media);
+    public void addSubscription(UserProfile subscriber) {
+        this.subscribes.add(subscriber);
     }
 
 
