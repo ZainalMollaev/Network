@@ -48,6 +48,7 @@ public class UserProfileService {
         person.addSubscription(subscription);
     }
 
+    //todo доделать
     public List<SubscriptionDto> getAllUserSubscriptions(String email) {
 
         List<UserProfile> subscriptionsByEmail = profileRepository.getSubscriptionsByEmail(email);

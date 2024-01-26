@@ -12,6 +12,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
+
+    //todo Добавить роли
     @Override
     public UserDetails loadUserByUsername(String email) {
         UserDto userDto = userService.getUserByEmail(email);

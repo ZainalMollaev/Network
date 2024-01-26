@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -33,18 +32,5 @@ public class ProfileController {
     public ResponseEntity getProfileEmail(@PathVariable("email") String email) {
         return profileService.getUserProfile(email);
     }
-
-    @Operation(summary = "add user subscription")
-    @PutMapping("/subscribeUser")
-    public ResponseEntity subscribe(@RequestParam("personEmail") String personEmail, @RequestParam("subscriptionEmail") String subscriptionEmail ) {
-        return profileService.subscribeUser(personEmail, subscriptionEmail);
-    }
-
-    @Operation(summary = "get all user subscriptions")
-    @GetMapping("/getAllUserSubscriptions")
-    public ResponseEntity getAllUserSubscriptions(@RequestParam("email") String email) {
-        return profileService.getAllUserSubscriptions(email);
-    }
-
 
 }

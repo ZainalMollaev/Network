@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.request.UserMediaDto;
 import org.education.network.dto.response.CommonResponse;
+import org.education.network.enumtypes.Bucket;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ public class MediaService {
 
     public ResponseEntity saveMedia(UserMediaDto userMediaDto) {
         UserProfile profile = repository.findByEmail(userMediaDto.getUsername());
-        fileService.saveFile(userMediaDto.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
+        fileService.saveFile(Bucket.users.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)
                         .body(userMediaDto.getFile().getOriginalFilename() + " successfully saved")
