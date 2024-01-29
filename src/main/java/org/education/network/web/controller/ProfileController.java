@@ -7,11 +7,12 @@ import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.service.ProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/profile")
@@ -23,14 +24,14 @@ public class ProfileController {
 
     @Operation(summary = "edit profile", description = "edit all fields")
     @PutMapping("/edit")
-    public ResponseEntity editProfile(@RequestBody UserProfileDto profile) {
-        return profileService.editUserProfile(profile);
+    public ResponseEntity editProfile(@RequestBody UserProfileDto profile, Principal principal) {
+        return profileService.editUserProfile(profile, principal.getName());
     }
 
     @Operation(summary = "get profile", description = "get all fields")
-    @GetMapping("/{email}")
-    public ResponseEntity getProfileEmail(@PathVariable("email") String email) {
-        return profileService.getUserProfile(email);
+    @GetMapping
+    public ResponseEntity getProfileEmail(Principal principal) {
+        return profileService.getUserProfile(principal.getName());
     }
 
 }

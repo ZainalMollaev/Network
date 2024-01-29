@@ -12,7 +12,8 @@ public class ProfileService {
 
     private final UserProfileService userProfileService;
 
-    public ResponseEntity editUserProfile(UserProfileDto userProfileDto) {
+    public ResponseEntity editUserProfile(UserProfileDto userProfileDto, String subject) {
+        userProfileDto.setEmail(subject);
         userProfileService.saveUserProfileByEmail(userProfileDto);
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)

@@ -45,10 +45,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             UserDto user = toUser(request);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
-            accessToken = jwtUtil.createAccessToken(user);
-            String refreshToken = jwtUtil.createRefreshToken(user);
+            accessToken = jwtUtil.createAccessToken(user.getEmail());
+            String refreshToken = jwtUtil.createRefreshToken(user.getEmail());
             user.setRefreshToken(refreshToken);
-            userService.updateRefreshToken(user);
+            userService.updateRefreshToken(user.getEmail(), refreshToken);
 
             request.setAttribute(properties.getAttributeName(), CommonResponse.builder()
                     .hasErrors(false)

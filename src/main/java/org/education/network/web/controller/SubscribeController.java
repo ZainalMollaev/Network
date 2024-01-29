@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/subs")
@@ -22,14 +24,14 @@ public class SubscribeController {
     @Operation(summary = "add user subscription")
     @PutMapping("/subscribe/user")
     public ResponseEntity subscribe(@RequestParam("personEmail") String personEmail,
-                                    @RequestParam("subscriptionEmail") String subscriptionEmail) {
-        return profileService.subscribeUser(personEmail, subscriptionEmail);
+                                    Principal principal) {
+        return profileService.subscribeUser(personEmail, principal.getName());
     }
 
     @Operation(summary = "get all user subscriptions")
     @GetMapping("/subscriptions/user")
-    public ResponseEntity getAllUserSubscriptions(@RequestParam("email") String email) {
-        return profileService.getAllUserSubscriptions(email);
+    public ResponseEntity getAllUserSubscriptions(Principal principal) {
+        return profileService.getAllUserSubscriptions(principal.getName());
     }
 
 }

@@ -4,14 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.response.CommonResponse;
-import org.education.network.dto.bd.UserDto;
 import org.education.network.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.time.Instant;
 
 @RestController
@@ -26,11 +25,11 @@ public class JwtController {
             summary = "get access token",
             description = "generate access token and get")
     @PostMapping("/accessToken")
-    public ResponseEntity getAccessToken(@RequestBody UserDto userDto) {
+    public ResponseEntity getAccessToken(Principal principal) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
-                        .hasErrors(true)
-                        .body(jwtService.updateAccess(userDto))
+                        .hasErrors(false)
+                        .body(jwtService.updateAccess(principal.getName()))
                         .createdAt(Instant.now().toString())
                         .build()
         );
@@ -40,11 +39,11 @@ public class JwtController {
             summary = "get refresh token",
             description = "generate refresh token and save it")
     @PostMapping ("/refreshToken")
-    public ResponseEntity getRefreshToken(@RequestBody UserDto userDto) {
+    public ResponseEntity getRefreshToken(String refreshToken, Principal principal) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
-                        .hasErrors(true)
-                        .body(jwtService.updateRefresh(userDto))
+                        .hasErrors(false)
+                        .body(jwtService.updateRefresh(principal.getName(), refreshToken))
                         .createdAt(Instant.now().toString())
                         .build()
         );

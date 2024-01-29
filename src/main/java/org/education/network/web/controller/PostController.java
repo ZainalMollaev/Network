@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,13 +27,13 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/create")
-    public ResponseEntity createPost(@ModelAttribute PostDto postDto) {
-        return postService.createPost(postDto);
+    public ResponseEntity createPost(@ModelAttribute PostDto postDto, Principal principal) {
+        return postService.createPost(postDto, principal.getName());
     }
 
     @GetMapping
-    public ResponseEntity getAllPostsByEmail(@RequestParam("email") String email) {
-        return postService.getAllPostsByEmail(email);
+    public ResponseEntity getAllPostsByEmail(Principal principal) {
+        return postService.getAllPostsByEmail(principal.getName());
     }
 
     @GetMapping(value = "/{postId}")
@@ -43,7 +44,7 @@ public class PostController {
     @Operation(
             summary = "delete user profile file")
     @DeleteMapping(value = "/file")
-    public ResponseEntity deletePicture(@RequestBody DeleteMediaDto deleteMediaDto) {
-        return postService.deleteFile(deleteMediaDto);
+    public ResponseEntity deletePicture(@RequestBody DeleteMediaDto deleteMediaDto, Principal principal) {
+        return postService.deleteFile(deleteMediaDto, principal.getName());
     }
 }

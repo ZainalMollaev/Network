@@ -2,7 +2,6 @@ package org.education.network.security.auth;
 
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.education.network.dto.bd.UserDto;
 import org.education.network.web.exceptions.JwtException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
@@ -24,8 +23,8 @@ public class JwtUtil {
         this.jwtParser = Jwts.parser().setSigningKey(secret_key);
     }
 
-    private String createToken(UserDto user, long tokenValidity) {
-        Claims claims = Jwts.claims().setSubject(user.getEmail());
+    private String createToken(String subject, long tokenValidity) {
+        Claims claims = Jwts.claims().setSubject(subject);
         Date tokenCreateTime = new Date();
         Date validity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(tokenValidity));
         return Jwts.builder()
@@ -35,12 +34,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String createAccessToken(UserDto user) {
-        return createToken(user, accessTokenValidity);
+    public String createAccessToken(String subject) {
+        return createToken(subject, accessTokenValidity);
     }
 
-    public String createRefreshToken(UserDto user) {
-        return createToken(user, refreshTokenValidity);
+    public String createRefreshToken(String subject) {
+        return createToken(subject, refreshTokenValidity);
     }
 
     private Claims parseJwtClaims(String token) {

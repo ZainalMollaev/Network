@@ -21,8 +21,8 @@ public class MediaService {
     private final UserProfileRepository repository;
     private final FileService fileService;
 
-    public ResponseEntity saveMedia(UserMediaDto userMediaDto) {
-        UserProfile profile = repository.findByEmail(userMediaDto.getUsername());
+    public ResponseEntity saveMedia(UserMediaDto userMediaDto, String subject) {
+        UserProfile profile = repository.findByEmail(subject);
         fileService.saveFile(Bucket.users.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)
@@ -31,10 +31,9 @@ public class MediaService {
                 .build());
     }
 
-    public ResponseEntity deleteMedia(DeleteMediaDto deleteMediaDto) {
-        UserProfile profile = repository.findByEmail(deleteMediaDto.getId());
-        deleteMediaDto.setId(profile.getId());
-        fileService.deleteFile(Collections.singletonList(deleteMediaDto));
+    public ResponseEntity deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
+        UserProfile profile = repository.findByEmail(subject);
+        fileService.deleteFile(Collections.singletonList(deleteMediaDto), profile.getId());
         return ResponseEntity.ok(CommonResponse.builder()
                 .hasErrors(false)
                 .body(deleteMediaDto.getFileName() + " successfully deleted")

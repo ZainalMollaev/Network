@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "userProfile")
+@ToString
 @Builder
 @Entity
 public class Language {
