@@ -2,20 +2,26 @@ package org.education.network.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import org.education.network.enumtypes.Roles;
 
-@Setter
-@Getter
-@NoArgsConstructor
+import java.util.List;
+
+@Data
 @AllArgsConstructor
-@ToString
+@NoArgsConstructor
 @Builder
 public class JwtDto {
 
-    private String accessToken;
-    private String refreshToken;
+    private String username;
+    private List<Roles> roles;
 
+    @Override
+    public String toString() {
+        return "JwtDto{" +
+                "username='" + username + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 }

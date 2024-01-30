@@ -31,6 +31,13 @@ properties:
     avatarLink: avatar/
     userBucket: users
     postBucket: posts
+  jwt:
+    secretKey:
+    accessTokenValidity:
+    refreshTokenValidity:
+    tokenHeader:
+    tokenPrefix:
+
 
 
 springdoc:

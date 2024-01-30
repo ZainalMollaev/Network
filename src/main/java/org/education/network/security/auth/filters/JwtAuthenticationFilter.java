@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.education.network.security.auth.JwtUtil;
+import org.education.network.service.UserService;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,11 +34,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             Claims claims = jwtUtil.resolveClaims(request);
 
-            if(claims != null && jwtUtil.validateClaims(claims)) {
+            if(claims != null
+                    && jwtUtil.validateClaims(claims)
+                    && userService.existsByEmail(claims.getSubject())) {
+
                 String email = claims.getSubject();
                 Authentication authentication =
                         new UsernamePasswordAuthenticationToken(email, "", new ArrayList<>());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
 
             filterChain.doFilter(request, response);
@@ -46,4 +52,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
 }
-

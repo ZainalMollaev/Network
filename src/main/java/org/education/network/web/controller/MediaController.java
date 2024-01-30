@@ -8,6 +8,8 @@ import org.education.network.dto.request.UserMediaDto;
 import org.education.network.service.MediaService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,7 +32,8 @@ public class MediaController {
     @Operation(
             summary = "save avatar or backImg")
     @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity savePicture(@ModelAttribute UserMediaDto userMediaDto, Principal principal) {
+    public ResponseEntity savePicture(@ModelAttribute UserMediaDto userMediaDto, Principal principal, Authentication auth) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return mediaService.saveMedia(userMediaDto, principal.getName());
     }
 
