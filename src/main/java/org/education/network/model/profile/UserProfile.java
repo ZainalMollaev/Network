@@ -53,13 +53,12 @@ public class UserProfile {
     private String location;
     @Column(unique = true, nullable = false)
     private String phoneNumber;
-    //todo написать тест на language
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_profile_language",
             joinColumns = @JoinColumn(name = "user_profile_id"),
-            inverseJoinColumns = @JoinColumn(name = "language_id"),
-            uniqueConstraints = @UniqueConstraint(columnNames = {"user_profile_id", "language_id"}))
+            inverseJoinColumns = @JoinColumn(name = "language_id"))
     private List<Language> languages;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)

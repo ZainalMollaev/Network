@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public class UserMediaDto {
 
-    private String username;
     private String bucket;
     private MultipartFile file;
 

@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 public class DeleteMediaDto {
 
-    private String id;
     private String fileName;
     private String bucket;
 }

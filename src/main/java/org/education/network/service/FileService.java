@@ -40,10 +40,10 @@ public class FileService {
 
     }
 
-    public void deleteFile(List<DeleteMediaDto> deleteMediaDto) {
+    public void deleteFile(List<DeleteMediaDto> deleteMediaDto, String id) {
         for (DeleteMediaDto file:
                 deleteMediaDto) {
-            minioService.deleteFile(file.getBucket(), file.getId() + "/" + file.getFileName());
+            minioService.deleteFile(file.getBucket(), id + "/" + file.getFileName());
         }
     }
 

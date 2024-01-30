@@ -23,8 +23,8 @@ public class PostService {
     private final PostMapper postMapper;
     private final FileService fileService;
 
-    public ResponseEntity createPost(PostDto postDto) {
-
+    public ResponseEntity createPost(PostDto postDto, String subject) {
+        postDto.setEmail(subject);
         Post savedPost = postRepository.save(postMapper.toEntity(postDto));
 
         fileService.saveFile(Bucket.posts.getBucket(), savedPost.getId(), postDto.getFiles());
@@ -53,9 +53,9 @@ public class PostService {
                 .build());
     }
 
-    public ResponseEntity deleteFile(DeleteMediaDto deleteMediaDto) {
+    public ResponseEntity deleteFile(DeleteMediaDto deleteMediaDto, String subject) {
 
-        fileService.deleteFile(Collections.singletonList(deleteMediaDto));
+        fileService.deleteFile(Collections.singletonList(deleteMediaDto), subject);
 
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)

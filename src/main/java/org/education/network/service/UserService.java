@@ -23,12 +23,12 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void updateRefreshToken(UserDto userDto) {
-        userRepository.updateRefreshByEmail(userDto.getEmail(), userDto.getRefreshToken());
+    public void updateRefreshToken(String subject, String refreshToken) {
+        userRepository.updateRefreshByEmail(subject, refreshToken);
     }
 
-    public String getRefreshTokenByEmail(UserDto userDto) {
-        return userRepository.findRefreshByEmail(userDto.getEmail());
+    public String getRefreshTokenByEmail(String email) {
+        return userRepository.findRefreshByEmail(email);
     }
 
 }

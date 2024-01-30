@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final LogSignService logSignService;
-
+    //todo написать exception handler для неправильного логина
     @Operation(
             summary = "Authorization/Login",
             description = "check if access token is right")
