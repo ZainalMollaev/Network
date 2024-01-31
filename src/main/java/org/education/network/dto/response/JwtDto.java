@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.education.network.enumtypes.Roles;
+import org.education.network.enumtypes.Role;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +13,7 @@ import org.education.network.enumtypes.Roles;
 public class JwtDto {
 
     private String username;
-    private Roles role;
+    private Role role;
 
 
 }

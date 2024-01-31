@@ -1,13 +1,11 @@
 package org.education.network.security.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import org.education.network.dto.response.JwtDto;
-import org.education.network.enumtypes.Roles;
 import org.education.network.properties.JwtProperties;
 import org.education.network.web.exceptions.JwtException;
 import org.springframework.security.core.AuthenticationException;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 
 @Component
 public class JwtUtil {

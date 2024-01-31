@@ -18,11 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.enumtypes.Roles;
 import org.education.network.model.profile.UserProfile;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -40,7 +38,7 @@ public class Role {
 
     @Enumerated(value = EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private Roles name;
+    private org.education.network.enumtypes.Role name;
 
     @ManyToMany(mappedBy = "roles")
     private Set<UserProfile> profile = new HashSet<>();

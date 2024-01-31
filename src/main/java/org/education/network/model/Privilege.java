@@ -14,10 +14,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.enumtypes.Privileges;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,7 +33,7 @@ public class Privilege {
 
     @Column(unique = true, nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private Privileges name;
+    private org.education.network.enumtypes.Privilege name;
 
     @ManyToMany(mappedBy = "privileges")
     @Builder.Default
