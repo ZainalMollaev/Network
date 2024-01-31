@@ -1,30 +1,43 @@
 package org.education.network.service;
 
-import lombok.RequiredArgsConstructor;
-import org.education.network.security.auth.JwtUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.education.network.dto.response.JwtDto;
+import org.education.network.security.auth.JwtUtil;
+import org.education.network.dto.response.JwtResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
+
 @Service
-@RequiredArgsConstructor
 public class JwtService {
 
     private final JwtUtil jwtUtil;
     private final UserService userService;
+    private ObjectMapper mapper;
 
-    public JwtDto updateAccess(String subject) {
-        return JwtDto.builder()
-                .accessToken(jwtUtil.createAccessToken(subject))
-                .refreshToken(userService.getRefreshTokenByEmail(subject))
+    public JwtService(JwtUtil jwtUtil, UserService userService) {
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
+    }
+
+    @SneakyThrows
+    public JwtResponseDto updateAccess(Principal principal) {
+        JwtDto jwtDto = mapper.readValue(principal.getName(), JwtDto.class);
+        return JwtResponseDto.builder()
+                .accessToken(jwtUtil.createAccessToken(jwtDto))
+                .refreshToken(userService.getRefreshTokenByEmail(jwtDto.getUsername()))
                 .build();
     }
 
-    public JwtDto updateRefresh(String subject, String refreshToken) {
-        refreshToken = jwtUtil.createRefreshToken(subject);
+    @SneakyThrows
+    public JwtResponseDto updateRefresh(String subject) {
+        JwtDto jwtDto = mapper.readValue(subject, JwtDto.class);
+        String refreshToken = jwtUtil.createRefreshToken(jwtDto);
         userService.updateRefreshToken(subject, refreshToken);
 
-        return JwtDto.builder()
-                .accessToken(jwtUtil.createAccessToken(subject))
+        return JwtResponseDto.builder()
+                .accessToken(jwtUtil.createAccessToken(jwtDto))
                 .refreshToken(refreshToken)
                 .build();
     }

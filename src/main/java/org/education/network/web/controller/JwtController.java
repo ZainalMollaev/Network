@@ -29,7 +29,7 @@ public class JwtController {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(false)
-                        .body(jwtService.updateAccess(principal.getName()))
+                        .body(jwtService.updateAccess(principal))
                         .createdAt(Instant.now().toString())
                         .build()
         );
@@ -39,11 +39,11 @@ public class JwtController {
             summary = "get refresh token",
             description = "generate refresh token and save it")
     @PostMapping ("/refreshToken")
-    public ResponseEntity getRefreshToken(String refreshToken, Principal principal) {
+    public ResponseEntity getRefreshToken(Principal principal) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(false)
-                        .body(jwtService.updateRefresh(principal.getName(), refreshToken))
+                        .body(jwtService.updateRefresh(principal.getName()))
                         .createdAt(Instant.now().toString())
                         .build()
         );

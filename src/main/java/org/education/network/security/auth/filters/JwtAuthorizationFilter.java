@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserDto;
+import org.education.network.dto.response.JwtDto;
 import org.education.network.properties.FilterProperties;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
@@ -43,10 +44,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (accessToken == null) {
 
             UserDto user = toUser(request);
+            
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
-            accessToken = jwtUtil.createAccessToken(user.getEmail());
-            String refreshToken = jwtUtil.createRefreshToken(user.getEmail());
+            JwtDto jwtDto = JwtDto.builder()
+                    .username(user.getEmail())
+                    .role(user.getRole())
+                    .build();
+
+            accessToken = jwtUtil.createAccessToken(jwtDto);
+            String refreshToken = jwtUtil.createRefreshToken(jwtDto);
             user.setRefreshToken(refreshToken);
             userService.updateRefreshToken(user.getEmail(), refreshToken);
 

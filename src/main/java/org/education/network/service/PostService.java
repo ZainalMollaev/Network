@@ -27,7 +27,7 @@ public class PostService {
         postDto.setEmail(subject);
         Post savedPost = postRepository.save(postMapper.toEntity(postDto));
 
-        fileService.saveFile(Bucket.posts.getBucket(), savedPost.getId(), postDto.getFiles());
+        fileService.saveFile(Bucket.POSTS.getBucket(), savedPost.getId(), postDto.getFiles());
 
         return ResponseEntity.ok().build();
     }

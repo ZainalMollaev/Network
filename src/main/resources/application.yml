@@ -31,7 +31,12 @@ properties:
     avatarLink: avatar/
     userBucket: users
     postBucket: posts
-
+  jwt:
+    secretKey: IhiMjRKZAGO0ecKNUXCXull5zmYgsBKsI63uGB2aoSJFukFJaSvIZfI8ACvS
+    accessTokenValidity: 2
+    refreshTokenValidity: 15
+    tokenHeader: Authorization
+    tokenPrefix: Bearer
 
 springdoc:
   api-docs:

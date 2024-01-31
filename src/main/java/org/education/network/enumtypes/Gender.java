@@ -1,7 +1,7 @@
 package org.education.network.enumtypes;
 
 public enum Gender {
-    male("male"), female("female");
+    MALE("male"), FEMALE("female");
     private String gender;
     Gender(String gender) {
         this.gender = gender;

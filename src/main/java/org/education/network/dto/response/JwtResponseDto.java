@@ -1,23 +1,21 @@
-package org.education.network.dto.bd;
+package org.education.network.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.SuperBuilder;
-import org.education.network.enumtypes.Role;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 @ToString
-public class UserDto {
+@Builder
+public class JwtResponseDto {
 
-    private String email;
-    private String password;
+    private String accessToken;
     private String refreshToken;
 
 }

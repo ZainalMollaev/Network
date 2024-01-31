@@ -1,5 +1,6 @@
 package org.education.network.security.auth.filters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.education.network.dto.response.JwtDto;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private ObjectMapper mapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -32,11 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             Claims claims = jwtUtil.resolveClaims(request);
 
-            if(claims != null && jwtUtil.validateClaims(claims)) {
-                String email = claims.getSubject();
+            if(claims != null
+                    && jwtUtil.validateClaims(claims)) {
+                JwtDto jwtDto = mapper.readValue(claims.getSubject(), JwtDto.class);
                 Authentication authentication =
-                        new UsernamePasswordAuthenticationToken(email, "", new ArrayList<>());
+                        new UsernamePasswordAuthenticationToken(jwtDto.getUsername(), "", List.of());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
 
             filterChain.doFilter(request, response);
@@ -46,4 +51,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
 }
-
