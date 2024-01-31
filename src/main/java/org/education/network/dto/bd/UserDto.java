@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.education.network.enumtypes.Roles;
 
 @Getter
 @Setter
@@ -18,5 +19,6 @@ public class UserDto {
     private String email;
     private String password;
     private String refreshToken;
+    private Roles role;
 
 }

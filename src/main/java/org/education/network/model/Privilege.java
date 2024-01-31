@@ -1,7 +1,9 @@
-package org.education.network.model.profile;
+package org.education.network.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -12,25 +14,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.education.network.enumtypes.Privileges;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "userProfile")
 @Builder
+@ToString(exclude = "role")
 @Entity
-public class Language {
+public class Privilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true, nullable = false)
-    private String name;
 
-    @ManyToMany(mappedBy = "languages")
-    private List<UserProfile> userProfile;
+    @Column(unique = true, nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Privileges name;
+
+    @ManyToMany(mappedBy = "privileges")
+    @Builder.Default
+    private Set<Role> role = new HashSet<>();
 
 }

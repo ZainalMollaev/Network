@@ -3,6 +3,8 @@ package org.education.network.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -13,8 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.education.network.enumtypes.Roles;
 import org.education.network.model.profile.UserProfile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -36,6 +40,9 @@ public class User {
     private String password;
     @Column(unique = true)
     private String refreshToken;
+    @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
+    private Roles role;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn

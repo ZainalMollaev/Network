@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.education.network.enumtypes.Roles;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,13 +13,7 @@ import java.util.List;
 public class JwtDto {
 
     private String username;
-    private List<Roles> roles;
+    private Roles role;
 
-    @Override
-    public String toString() {
-        return "JwtDto{" +
-                "username='" + username + '\'' +
-                ", roles=" + roles +
-                '}';
-    }
+
 }

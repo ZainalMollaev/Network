@@ -19,7 +19,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.education.network.enumtypes.Roles;
 import org.education.network.model.Post;
+import org.education.network.model.Role;
 import org.education.network.model.User;
 import org.education.network.model.profile.embedded.Education;
 import org.education.network.model.profile.embedded.LastJob;
@@ -36,7 +38,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"subscribes", "languages", "posts"})
+@ToString(exclude = {"subscribes", "languages", "posts", "roles"})
 @Builder
 @Entity
 public class UserProfile {
@@ -59,11 +61,21 @@ public class UserProfile {
             name = "user_profile_language",
             joinColumns = @JoinColumn(name = "user_profile_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
-    private List<Language> languages;
+    @Builder.Default
+    private Set<Language> languages = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_profile_roles",
+                joinColumns = @JoinColumn(name = "profile_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id"),
+                uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id","role_id"}))
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Post> posts;
+    @Builder.Default
+    private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
     @JoinTable(name="tbl_subscribers",

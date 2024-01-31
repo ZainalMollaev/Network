@@ -1,9 +1,11 @@
 package org.education.network.security.auth;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.SneakyThrows;
 import org.education.network.dto.response.JwtDto;
 import org.education.network.enumtypes.Roles;
 import org.education.network.properties.JwtProperties;
@@ -34,7 +36,9 @@ public class JwtUtil {
         this.jwtParser = Jwts.parser().setSigningKey(jwtProperties.getSecretKey());
     }
 
-    private String createToken(String subject, long tokenValidity) {
+    @SneakyThrows
+    private String createToken(JwtDto jwtDto, long tokenValidity) {
+        String subject = objectMapper.writeValueAsString(jwtDto);
         Claims claims = Jwts.claims().setSubject(subject);
 
         Instant tokenCreateTime = Instant.now().plus(tokenValidity, ChronoUnit.DAYS);
@@ -47,31 +51,12 @@ public class JwtUtil {
                 .compact();
     }
 
-    private String createToken(String subject, List<Roles> roles, long tokenValidity) {
-
-        JwtDto jwtDto = JwtDto.builder()
-                .username(subject)
-                .roles(roles)
-                .build();
-
-        Claims claims = Jwts.claims().setSubject(subject);
-
-        Instant tokenCreateTime = Instant.now().plus(tokenValidity, ChronoUnit.DAYS);
-        Date validity = new Date(tokenCreateTime.toEpochMilli());
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
-                .compact();
+    public String createAccessToken(JwtDto jwtDto) {
+        return createToken(jwtDto, jwtProperties.getAccessTokenValidity());
     }
 
-    public String createAccessToken(String subject) {
-        return createToken(subject, jwtProperties.getAccessTokenValidity());
-    }
-
-    public String createRefreshToken(String subject) {
-        return createToken(subject, jwtProperties.getRefreshTokenValidity());
+    public String createRefreshToken(JwtDto jwtDto) {
+        return createToken(jwtDto, jwtProperties.getRefreshTokenValidity());
     }
 
     private Claims parseJwtClaims(String token) {
