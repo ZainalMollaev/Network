@@ -26,6 +26,12 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             "WHERE up.user.email = :email")
     List<UserProfile> getSubscriptionsByEmail(String email);
 
-    @Query(value = "SELECT * FROM ", nativeQuery = true)
+    @Query(value = "SELECT * " +
+                    "FROM tbl_subscribers users " +
+                    "CROSS JOIN tbl_subscribers subs " +
+                    "WHERE users.subscriber_id = subs.user_id " +
+                    "AND subs.subscriber_id in (SELECT * " +
+                    "FROM users) ", nativeQuery = true)
     List<UserProfile> getCommonSubs();
+
 }

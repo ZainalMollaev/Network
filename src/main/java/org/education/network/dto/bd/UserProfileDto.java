@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.education.network.enumtypes.Role;
 
 import java.util.List;
 
@@ -30,5 +31,6 @@ public class UserProfileDto extends UserDto{
     private String avatar;
     private String backPhoto;
     private String phoneNumber;
+    private List<Role> roles;
 
 }

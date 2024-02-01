@@ -29,7 +29,7 @@ public class User {
 
     @Id
     @Builder.Default
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
     @Column(unique = true, nullable = false)
     private String email;
     @Column(unique = true, nullable = false)

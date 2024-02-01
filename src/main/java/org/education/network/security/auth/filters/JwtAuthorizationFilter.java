@@ -49,7 +49,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             JwtDto jwtDto = JwtDto.builder()
                     .username(user.getEmail())
-                    .role(user.getRole())
                     .build();
 
             accessToken = jwtUtil.createAccessToken(jwtDto);

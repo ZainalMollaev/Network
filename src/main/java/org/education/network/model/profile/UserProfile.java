@@ -12,7 +12,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.NamedEntityGraph;
-import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -23,8 +22,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.enumtypes.Role;
 import org.education.network.model.Post;
+import org.education.network.model.Role;
 import org.education.network.model.User;
 import org.education.network.model.profile.embedded.Education;
 import org.education.network.model.profile.embedded.LastJob;
@@ -32,7 +31,9 @@ import org.education.network.model.profile.embedded.PersonMain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -59,7 +60,7 @@ public class UserProfile {
 
     @Id
     @Builder.Default
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
     @Embedded
     private PersonMain personMain;
     @Embedded
@@ -73,7 +74,7 @@ public class UserProfile {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_profile_language",
-            joinColumns = @JoinColumn(name = "user_profile_id"),
+            joinColumns = @JoinColumn(name = "profile_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     @Builder.Default
     private Set<Language> languages = new HashSet<>();
@@ -84,7 +85,7 @@ public class UserProfile {
                 inverseJoinColumns = @JoinColumn(name = "role_id"),
                 uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id","role_id"}))
     @Builder.Default
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -93,10 +94,10 @@ public class UserProfile {
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
     @JoinTable(name="tbl_subscribers",
-            joinColumns=@JoinColumn(name="user_id"),
+            joinColumns=@JoinColumn(name="profile_id"),
             inverseJoinColumns=@JoinColumn(name="subscriber_id"),
             uniqueConstraints = {
-                    @UniqueConstraint(columnNames = { "user_id", "subscriber_id" })}
+                    @UniqueConstraint(columnNames = { "profile_id", "subscriber_id" })}
     )
     @Builder.Default
     private Set<UserProfile> subscribes = new HashSet<>();

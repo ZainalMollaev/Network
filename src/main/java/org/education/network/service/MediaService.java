@@ -23,7 +23,7 @@ public class MediaService {
 
     public ResponseEntity saveMedia(UserMediaDto userMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        fileService.saveFile(Bucket.USERS.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
+        fileService.saveFile(Bucket.USERS.getBucket(), profile.getId().toString(), Collections.singletonList(userMediaDto.getFile()));
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)
                         .body(userMediaDto.getFile().getOriginalFilename() + " successfully saved")
@@ -33,7 +33,7 @@ public class MediaService {
 
     public ResponseEntity deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        fileService.deleteFile(Collections.singletonList(deleteMediaDto), profile.getId());
+        fileService.deleteFile(Collections.singletonList(deleteMediaDto), profile.getId().toString());
         return ResponseEntity.ok(CommonResponse.builder()
                 .hasErrors(false)
                 .body(deleteMediaDto.getFileName() + " successfully deleted")

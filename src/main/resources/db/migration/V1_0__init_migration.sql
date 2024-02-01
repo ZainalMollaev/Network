@@ -36,17 +36,17 @@ create table if not exists language(
 );
 
 create table if not exists user_profile_language(
-    user_profile_id uuid,
+    profile_id uuid,
     language_id smallint,
-    FOREIGN KEY (user_profile_id) REFERENCES user_profile (id),
+    FOREIGN KEY (profile_id) REFERENCES user_profile (id),
     FOREIGN KEY (language_id) REFERENCES language (id),
-    unique(user_profile_id, language_id)
+    unique(profile_id, language_id)
 );
 
 create table if not exists tbl_subscribers(
-    user_id uuid,
+    profile_id uuid,
     subscriber_id uuid,
-    FOREIGN KEY (user_id) REFERENCES user_profile (id),
+    FOREIGN KEY (profile_id) REFERENCES user_profile (id),
     FOREIGN KEY (subscriber_id) REFERENCES user_profile (id),
-    unique(user_id, subscriber_id)
+    unique(profile_id, subscriber_id)
 );

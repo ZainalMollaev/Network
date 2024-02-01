@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class PostService {
         postDto.setEmail(subject);
         Post savedPost = postRepository.save(postMapper.toEntity(postDto));
 
-        fileService.saveFile(Bucket.POSTS.getBucket(), savedPost.getId(), postDto.getFiles());
+        fileService.saveFile(Bucket.POSTS.getBucket(), savedPost.getId().toString(), postDto.getFiles());
 
         return ResponseEntity.ok().build();
     }
@@ -43,7 +44,7 @@ public class PostService {
 
     }
 
-    public ResponseEntity getPost(String postId) {
+    public ResponseEntity getPost(UUID postId) {
         Post post = postRepository.getPostById(postId);
         PostDto postDto = postMapper.toDto(post);
         return ResponseEntity.ok().body(CommonResponse.builder()

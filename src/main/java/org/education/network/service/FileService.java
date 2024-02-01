@@ -2,6 +2,7 @@ package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.DeleteMediaDto;
+import org.education.network.enumtypes.Bucket;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,10 +18,10 @@ public class FileService {
     //todo ошибка если пытаются добавить файл а пользователя такого нет
 
     private final MinioService minioService;
-
+    //todo Добавить bucket в сигнатуру
     public byte[] getFile(String photoId) {
         try {
-            return minioService.getFile(photoId).readAllBytes();
+            return minioService.getFile(Bucket.POSTS, photoId).readAllBytes();
         } catch (IOException e) {
             throw new FileHandlerException(e);
         }

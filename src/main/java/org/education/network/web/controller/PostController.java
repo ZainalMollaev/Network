@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class PostController {
 
     @GetMapping(value = "/{postId}")
     public ResponseEntity getPost(@PathVariable("postId") String postId) {
-        return postService.getPost(postId);
+        return postService.getPost(UUID.fromString(postId));
     }
 
     @Operation(

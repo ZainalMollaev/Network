@@ -27,7 +27,7 @@ public class Post {
 
     @Id
     @Builder.Default
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
     private String title;
     private String description;
     private String location;

@@ -38,9 +38,10 @@ public class Role {
 
     @Enumerated(value = EnumType.STRING)
     @Column(unique = true, nullable = false)
-    private org.education.network.enumtypes.Role name;
+    private org.education.network.enumtypes.Role type;
 
     @ManyToMany(mappedBy = "roles")
+    @Builder.Default
     private Set<UserProfile> profile = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -48,6 +49,7 @@ public class Role {
                 joinColumns = @JoinColumn(name = "role_id"),
                 inverseJoinColumns = @JoinColumn(name = "privilege_id"),
                 uniqueConstraints = @UniqueConstraint(columnNames = {"role_id", "privilege_id"}))
+    @Builder.Default
     private Set<Privilege> privileges = new HashSet<>();
 
 }
