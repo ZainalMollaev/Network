@@ -10,6 +10,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.UniqueConstraint;
@@ -32,6 +36,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@NamedEntityGraph(
+        name = "userProfilePosts",
+        attributeNodes = {
+                @NamedAttributeNode(value = "subscribes", subgraph = "subgraph_posts")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "subgraph_posts",
+                attributeNodes = {
+                        @NamedAttributeNode(value = "posts")
+                })
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor

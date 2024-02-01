@@ -1,5 +1,6 @@
 package org.education.network.mapping;
 
+import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.enumtypes.Gender;
 import org.education.network.model.profile.Language;
@@ -12,7 +13,9 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+import java.util.List;
+
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, uses = PostMapper.class)
 public interface UserProfileMapper {
 
     @Mapping(source = "email", target = "user.email")
@@ -54,8 +57,26 @@ public interface UserProfileMapper {
     }
 
     default Gender toGender(String gender){
-        return Gender.valueOf(gender);
+        return Gender.valueOf(gender.toUpperCase());
     }
+
+    private List<SubscriptionDto.CommonSubs> getCommonSubs() {
+
+
+
+        return List.of();
+    }
+
+    @Mapping(source = "personMain.name", target = "firstname")
+    @Mapping(source = "personMain.lastname", target = "lastname")
+    @Mapping(source = "lastjob.title", target = "title")
+    @Mapping(source = "lastjob.company", target = "company")
+    @Mapping(source = "location", target = "location")
+    @Mapping(target = "posts")
+    @Mapping(target = "commonSubs")
+    SubscriptionDto toSubsDto(UserProfile profile);
+
+
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "email", target = "user.email")

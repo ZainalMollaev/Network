@@ -23,7 +23,7 @@ public class MediaService {
 
     public ResponseEntity saveMedia(UserMediaDto userMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        fileService.saveFile(Bucket.users.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
+        fileService.saveFile(Bucket.USERS.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)
                         .body(userMediaDto.getFile().getOriginalFilename() + " successfully saved")

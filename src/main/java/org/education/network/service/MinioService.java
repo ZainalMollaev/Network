@@ -12,6 +12,7 @@ import io.minio.errors.MinioException;
 import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.education.network.enumtypes.Bucket;
 import org.education.network.properties.MinioAppProperties;
 import org.education.network.web.exceptions.BadMinioRequestException;
 import org.education.network.web.exceptions.FileHandlerException;
@@ -65,11 +66,11 @@ public class MinioService {
         }
     }
 
-    public InputStream getFile(String photoId) {
+    public InputStream getFile(Bucket bucket, String photoId) {
         try {
             InputStream img = minioClient.getObject(
                     GetObjectArgs.builder()
-                            .bucket(properties.getBucket())
+                            .bucket(bucket.getBucket())
                             .object(photoId)
                             .build()
             );

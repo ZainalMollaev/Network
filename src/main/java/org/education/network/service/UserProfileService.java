@@ -1,7 +1,7 @@
 package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.bd.SubscriptionDto;
+import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.mapping.UserProfileMapper;
 import org.education.network.model.profile.UserProfile;
@@ -51,6 +51,8 @@ public class UserProfileService {
     public List<SubscriptionDto> getAllUserSubscriptions(String email) {
 
         List<UserProfile> subscriptionsByEmail = profileRepository.getSubscriptionsByEmail(email);
+
+
 
         return null;
     }
