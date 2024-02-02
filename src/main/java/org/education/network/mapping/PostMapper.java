@@ -45,21 +45,6 @@ public abstract class PostMapper {
     @Mapping(source = "userProfile.user.email", target = "email")
     public abstract PostDto toDto(Post post);
 
-//    @Mapping(source = "id", target = "id")
-//    @Mapping(source = "creationDate", target = "creationDate")
-//    @Mapping(target = "img", expression = "java(getNthImg(post.getId, 1))")
-//    public abstract SubscriptionDto.SubPostDto toSubPostDto(Post post);
-//
-//    public abstract List<SubscriptionDto.SubPostDto> subPostDtoList(List<Post> posts);
-//
-//    private byte[] getNthImg(String id, int i) {
-//        try {
-//            return minioService.getFile(Bucket.POSTS, id + "/" +i).readAllBytes();
-//        } catch (IOException e) {
-//            throw new FileHandlerException(e);
-//        }
-//    }
-
     protected UserProfile getProfile(String email) {
         UserProfile profile = repository.findByEmail(email);
         return profile;
