@@ -5,6 +5,7 @@ import org.education.network.enumtypes.Gender;
 import org.education.network.model.Role;
 import org.education.network.model.profile.Language;
 import org.education.network.model.profile.UserProfile;
+import org.education.network.model.repository.LanguageRepository;
 import org.education.network.model.repository.RoleRepository;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -23,6 +24,8 @@ public abstract class UserProfileMapper {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private LanguageRepository languageRepository;
 
     @Mapping(source = "email", target = "user.email")
     @Mapping(source = "password", target = "user.password")
@@ -59,43 +62,24 @@ public abstract class UserProfileMapper {
     }
 
     public Language fromStringToLanguage(String language) {
-        return Language.builder()
-                .name(language)
-                .build();
+        Optional<Language> byName = languageRepository.findByName(language);
+        return byName.orElseGet(() -> Language.builder().name(language).build());
     }
-
-    public abstract List<Role> roleList(List<org.education.network.enumtypes.Role> roles);
 
     public Role fromEnumToModelRole(org.education.network.enumtypes.Role role) {
         Optional<Role> byType = roleRepository.findByType(role);
-
         return byType.orElseGet(() -> Role.builder().type(role).build());
-
     }
 
     public org.education.network.enumtypes.Role fromModelToEnumRole(Role role) {
         return role.getType();
     }
 
+    public abstract List<Role> roleList(List<org.education.network.enumtypes.Role> roles);
+
     public Gender toGender(String gender){
         return Gender.valueOf(gender.toUpperCase());
     }
-
-//    private List<SubscriptionDto.CommonSubs> getCommonSubs() {
-//
-//
-//
-//        return List.of();
-//    }
-
-//    @Mapping(source = "personMain.name", target = "firstname")
-//    @Mapping(source = "personMain.lastname", target = "lastname")
-//    @Mapping(source = "lastjob.title", target = "title")
-//    @Mapping(source = "lastjob.company", target = "company")
-//    @Mapping(source = "location", target = "location")
-//    SubscriptionDto toSubsDto(UserProfile profile);
-
-
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(source = "email", target = "user.email")
