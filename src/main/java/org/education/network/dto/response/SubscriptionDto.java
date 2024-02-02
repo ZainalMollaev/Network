@@ -26,16 +26,28 @@ public class SubscriptionDto {
     private List<SubPostDto> posts;
     private List<CommonSubs> commonSubs;
 
-
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static class SubPostDto{
         private String id;
         private LocalDate creationDate;
         private byte[] img;
     }
 
+    @Setter
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static class CommonSubs {
         private byte[] miniAvatar;
         private String username;
     }
+
 }
 

@@ -53,7 +53,6 @@ public class UserProfileService {
         List<UserProfile> subscriptionsByEmail = profileRepository.getSubscriptionsByEmail(email);
 
 
-
         return null;
     }
 }

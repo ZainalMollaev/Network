@@ -14,4 +14,11 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             "FROM UserProfile up " +
             "WHERE up.user.email = :email")
     List<Post> getPostsByEmail(String email);
+
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "WHERE p.userProfile.user.email = :email " +
+            "ORDER BY p.creationDate " +
+            "FETCH FIRST 4")
+    List<Post> getPostsByEmailFetchFirst(String email);
 }

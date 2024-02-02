@@ -1,12 +1,12 @@
 package org.education.network.model.repository;
 
-import jakarta.persistence.NamedEntityGraphs;
 import org.education.network.model.profile.UserProfile;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
@@ -26,12 +26,13 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             "WHERE up.user.email = :email")
     List<UserProfile> getSubscriptionsByEmail(String email);
 
-    @Query(value = "SELECT * " +
-                    "FROM tbl_subscribers users " +
-                    "CROSS JOIN tbl_subscribers subs " +
-                    "WHERE users.subscriber_id = subs.user_id " +
-                    "AND subs.subscriber_id in (SELECT * " +
-                    "FROM users) ", nativeQuery = true)
-    List<UserProfile> getCommonSubs();
+    @Query(value = "SELECT tbl.subscriber_id " +
+            "FROM tbl_subscribers tbl " +
+            "JOIN user_profile up on up.user_id = tbl.profile_id " +
+            "CROSS JOIN tbl_subscribers subs " +
+            "WHERE users.subscriber_id = subs.subscriber_id " +
+            "    and tbl.profile_id = '8ac26cea-b0ed-4855-83e5-8c62a6e59ab7' " +
+            "    and tbl.profile_id != subs.profile_id", nativeQuery = true)
+    List<UUID> getCommonSubs();
 
 }
