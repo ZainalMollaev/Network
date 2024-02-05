@@ -1,13 +1,10 @@
 package org.education.network.mapping;
 
 import org.education.network.dto.request.PostDto;
-import org.education.network.dto.response.SubscriptionDto;
-import org.education.network.enumtypes.Bucket;
 import org.education.network.model.Post;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
 import org.education.network.service.MinioService;
-import org.education.network.web.exceptions.FileHandlerException;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,10 +14,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, imports = UUID.class)
 public abstract class PostMapper {
 
     @Autowired
@@ -31,7 +28,7 @@ public abstract class PostMapper {
     public abstract List<PostDto> postDtoList(List<Post> post);
     public abstract List<Post> postList(List<PostDto> postDto);
 
-    @Mapping(source = "id", target = "id")
+    @Mapping( target = "id", expression = "java(UUID.randomUUID())")
     @Mapping(source = "title", target = "title")
     @Mapping(source = "location", target = "location")
     @Mapping(source = "description", target = "description")

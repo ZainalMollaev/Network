@@ -19,6 +19,6 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             "FROM Post p " +
             "WHERE p.userProfile.user.email = :email " +
             "ORDER BY p.creationDate " +
-            "FETCH FIRST 4")
+            "LIMIT 4")
     List<Post> getPostsByEmailFetchFirst(String email);
 }

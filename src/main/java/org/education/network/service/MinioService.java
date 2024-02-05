@@ -8,6 +8,8 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.Result;
+import io.minio.StatObjectArgs;
+import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
 import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
@@ -68,13 +70,17 @@ public class MinioService {
 
     public InputStream getFile(Bucket bucket, String photoId) {
         try {
-            InputStream img = minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(bucket.getBucket())
-                            .object(photoId)
-                            .build()
-            );
-            return img;
+            boolean objectExist = isObjectExist(bucket, photoId);
+            if(objectExist) {
+                return minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(bucket.getBucket())
+                                .object(photoId)
+                                .build()
+                );
+            }
+
+            return InputStream.nullInputStream();
         } catch (MinioException e) {
             throw new BadMinioRequestException(e);
         } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
@@ -107,6 +113,21 @@ public class MinioService {
         }
     }
 
+    public boolean isObjectExist(Bucket bucket, String photoId) {
+        try {
+            minioClient.statObject(StatObjectArgs.builder()
+                    .bucket(bucket.getBucket())
+                    .object(photoId).build());
+            return true;
+        } catch (ErrorResponseException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @PostConstruct
     private void init() {
         minioClient =
@@ -123,3 +144,5 @@ public class MinioService {
     }
 
 }
+
+

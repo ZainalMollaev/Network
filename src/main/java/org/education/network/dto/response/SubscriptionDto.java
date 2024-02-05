@@ -1,6 +1,7 @@
 package org.education.network.dto.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +44,7 @@ public class SubscriptionDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @EqualsAndHashCode
+    @Builder
     @ToString
     public static class CommonSubs {
         private byte[] miniAvatar;
