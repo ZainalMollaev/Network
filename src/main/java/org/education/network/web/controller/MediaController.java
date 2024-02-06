@@ -26,14 +26,14 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Tag(name = "MediaController", description = "CRUD of media")
 public class MediaController {
+
     //todo тест и exception handler на неправильный логин
     private final MediaService mediaService;
 
     @Operation(
             summary = "save avatar or backImg")
     @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity savePicture(@ModelAttribute UserMediaDto userMediaDto, Principal principal, Authentication auth) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity savePicture(@ModelAttribute UserMediaDto userMediaDto, Principal principal) {
         return mediaService.saveMedia(userMediaDto, principal.getName());
     }
 

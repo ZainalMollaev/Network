@@ -31,6 +31,32 @@ properties:
     avatarLink: avatar/
     userBucket: users
     postBucket: posts
+  file:
+    compresses:
+      - name: posts
+        width: 200
+        height: 200
+      - name: subPosts
+        width: 200
+        height: 200
+      - name: recomendationsPost
+        width: 200
+        height: 200
+      - name: avatar
+        width: 200
+        height: 200
+      - name: miniAvatar
+        width: 200
+        height: 200
+      - name: notificationsAvatar
+        width: 200
+        height: 200
+      - name: commonSubsAvatar
+        width: 200
+        height: 200
+      - name: background
+        width: 200
+        height: 200
   jwt:
     secretKey: IhiMjRKZAGO0ecKNUXCXull5zmYgsBKsI63uGB2aoSJFukFJaSvIZfI8ACvS
     accessTokenValidity: 2

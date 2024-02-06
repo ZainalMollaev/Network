@@ -29,7 +29,7 @@ public class ProfileService {
                 .build());
     }
 
-    //todo нельязя подписываться на самого себя
+    //todo нельзя подписываться на самого себя
     public ResponseEntity subscribeUser(String personEmail, String subscriptionEmail) {
         userProfileService.subcribeUser(personEmail, subscriptionEmail);
         return ResponseEntity.ok(CommonResponse.builder()

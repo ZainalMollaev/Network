@@ -20,6 +20,8 @@ import org.education.network.web.exceptions.BadMinioRequestException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
@@ -86,12 +88,6 @@ public class MinioService {
         } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new FileHandlerException(e);
         }
-    }
-
-    public Iterable<Result<Item>> getAllObjects() {
-        return minioClient.listObjects(ListObjectsArgs.builder()
-                        .bucket(properties.getBucket())
-                .build());
     }
 
     private void createBucket() {
