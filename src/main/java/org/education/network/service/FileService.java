@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 
@@ -56,8 +55,15 @@ public class FileService {
                                             .outputFormat(file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")+1))
                                             .toOutputStream(ous);
 
+                                    StringBuilder filePath = new StringBuilder()
+                                            .append(id)
+                                            .append("/")
+                                            .append(compress.getName())
+                                            .append("/")
+                                            .append(file.getOriginalFilename().substring(0, file.getOriginalFilename().indexOf(".")));
+
                                     minioService.uploadFile(bucket,
-                                            id + "/" + file.getOriginalFilename().substring(0, file.getOriginalFilename().indexOf(".")),
+                                            filePath.toString(),
                                             new ByteArrayInputStream(ous.toByteArray()));
 
                                 } catch (IOException e) {

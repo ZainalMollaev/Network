@@ -36,7 +36,7 @@ properties:
       - name: posts
         width: 200
         height: 200
-      - name: subPosts
+      - name: postsSub
         width: 200
         height: 200
       - name: recomendationsPost
@@ -45,13 +45,13 @@ properties:
       - name: avatar
         width: 200
         height: 200
-      - name: miniAvatar
+      - name: avatarMini
         width: 200
         height: 200
-      - name: notificationsAvatar
+      - name: avatarNotifications
         width: 200
         height: 200
-      - name: commonSubsAvatar
+      - name: avatarCommonSubs
         width: 200
         height: 200
       - name: background
