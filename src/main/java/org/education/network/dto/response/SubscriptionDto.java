@@ -36,7 +36,7 @@ public class SubscriptionDto {
     public static class SubPostDto{
         private String id;
         private LocalDate creationDate;
-        private byte[] img;
+        private String img;
     }
 
     @Setter
@@ -47,7 +47,7 @@ public class SubscriptionDto {
     @Builder
     @ToString
     public static class CommonSubs {
-        private byte[] miniAvatar;
+        private String miniAvatar;
         private String username;
     }
 

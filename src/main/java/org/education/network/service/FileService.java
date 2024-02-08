@@ -3,24 +3,23 @@ package org.education.network.service;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 import org.education.network.dto.request.DeleteMediaDto;
+import org.education.network.dto.request.MultipartDto;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.properties.FileProperties;
 import org.education.network.web.exceptions.FileHandlerException;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class FileService {
 
     //todo ошибка если пытаются добавить файл а пользователя такого нет
-
     private final MinioService minioService;
     private final FileProperties fileProperties;
 
@@ -33,46 +32,47 @@ public class FileService {
         }
     }
 
-    public void saveFile(String bucket, String id, List<MultipartFile> multipartFiles) {
 
-        multipartFiles
-                .forEach(file -> {
-                    fileProperties
-                            .getCompresses()
-                            .stream()
-                            .filter(compress -> {
-                                String filename = file.getOriginalFilename().replaceAll("([-]\\d)?[.](jpg|jpeg|png)", "");
-                                return compress
-                                        .getName()
-                                        .contains(filename);
-                                    })
-                            .forEach(compress -> {
+    //todo сделать exception на превышение размера файла
+    @Async
+    public void saveFile(String bucket, String id, List<MultipartDto> multipartFiles) {
+        String filename = multipartFiles.get(0).getOriginalFilename().replaceAll("([-]\\d)?[.](jpg|jpeg|png)", "");
 
-                                try(ByteArrayOutputStream ous = new ByteArrayOutputStream()) {
+        List<FileProperties.Compress> compresses = fileProperties.getProperCompress(filename);
 
-                                    Thumbnails.of(file.getInputStream())
-                                            .size(compress.getHeight(), compress.getWidth())
-                                            .outputFormat(file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")+1))
-                                            .toOutputStream(ous);
+        compresses.forEach(compress ->
+                multipartFiles.forEach(file -> {
 
-                                    StringBuilder filePath = new StringBuilder()
-                                            .append(id)
-                                            .append("/")
-                                            .append(compress.getName())
-                                            .append("/")
-                                            .append(file.getOriginalFilename().substring(0, file.getOriginalFilename().indexOf(".")));
+                    if(!file.getOriginalFilename().contains("post-1")
+                            && (!compress.getName().equals("posts")
+                            && compress.getName().contains("posts")))
+                        return;
 
-                                    minioService.uploadFile(bucket,
-                                            filePath.toString(),
-                                            new ByteArrayInputStream(ous.toByteArray()));
+                    try(ByteArrayOutputStream ous = new ByteArrayOutputStream()) {
 
-                                } catch (IOException e) {
-                                    throw new FileHandlerException(e);
-                                }
+                        String substring = file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".") + 1);
+                        Thumbnails.of(file.getCloneInputStream())
+                                .size(compress.getHeight(), compress.getWidth())
+                                .outputFormat(substring)
+                                .toOutputStream(ous);
 
-                            });
-                });
+                        StringBuilder filePath = new StringBuilder()
+                                .append(id)
+                                .append("/")
+                                .append(compress.getName())
+                                .append("/")
+                                .append(file.getOriginalFilename().substring(0, file.getOriginalFilename().indexOf(".")));
 
+                        minioService.uploadFile(bucket,
+                                filePath.toString(),
+                                new ByteArrayInputStream(ous.toByteArray()));
+
+                    } catch (IOException e) {
+                        throw new FileHandlerException(e);
+                    }
+
+                })
+        );
     }
 
     public void deleteFile(List<DeleteMediaDto> deleteMediaDto, String id) {

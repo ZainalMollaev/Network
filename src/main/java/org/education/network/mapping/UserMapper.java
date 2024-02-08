@@ -10,6 +10,4 @@ public abstract class UserMapper {
 
     public abstract UserDto userToUserDto(User user);
 
-    public abstract User userDtoToUser(UserDto user);
-
 }

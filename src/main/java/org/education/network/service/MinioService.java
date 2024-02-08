@@ -2,16 +2,13 @@ package org.education.network.service;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
-import io.minio.ListObjectsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import io.minio.Result;
 import io.minio.StatObjectArgs;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
-import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.education.network.enumtypes.Bucket;
@@ -20,8 +17,6 @@ import org.education.network.web.exceptions.BadMinioRequestException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;

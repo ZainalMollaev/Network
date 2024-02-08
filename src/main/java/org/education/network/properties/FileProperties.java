@@ -19,4 +19,11 @@ public class FileProperties {
         private int height;
         private int width;
     }
+
+    public List<Compress> getProperCompress(String group) {
+        return compresses
+                .stream()
+                .filter(i -> i.getName().contains(group))
+                .toList();
+    }
 }

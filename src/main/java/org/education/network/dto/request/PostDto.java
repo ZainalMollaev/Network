@@ -26,4 +26,5 @@ public class PostDto {
     private LocalDate creationDate;
     private List<MultipartFile> files;
 
+    
 }

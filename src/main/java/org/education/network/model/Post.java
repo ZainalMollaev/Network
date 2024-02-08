@@ -13,7 +13,6 @@ import lombok.ToString;
 import org.education.network.model.profile.UserProfile;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.UUID;
 
 @Getter
