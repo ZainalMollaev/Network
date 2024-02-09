@@ -19,11 +19,11 @@ import java.util.Date;
 public class JwtUtil {
 
     private final JwtProperties jwtProperties;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper mapper;
 
     public JwtUtil(JwtProperties jwtProperties){
         this.jwtProperties = jwtProperties;
-        this.objectMapper = new ObjectMapper();
+        this.mapper = new ObjectMapper();
     }
 
     private JwtParser jwtParser;
@@ -36,7 +36,7 @@ public class JwtUtil {
 
     @SneakyThrows
     private String createToken(JwtDto jwtDto, long tokenValidity) {
-        String subject = objectMapper.writeValueAsString(jwtDto);
+        String subject = mapper.writeValueAsString(jwtDto);
         Claims claims = Jwts.claims().setSubject(subject);
 
         Instant tokenCreateTime = Instant.now().plus(tokenValidity, ChronoUnit.DAYS);
@@ -61,6 +61,18 @@ public class JwtUtil {
         return jwtParser.parseClaimsJws(token).getBody();
     }
 
+    public Claims resolveClaims(String token) {
+        try {
+            if (token != null) {
+                return parseJwtClaims(token);
+            }
+            return null;
+        } catch (Exception ex) {
+            throw new JwtException(ex);
+        }
+
+    }
+
     public Claims resolveClaims(HttpServletRequest req) {
         try {
             String token = resolveToken(req);
@@ -74,13 +86,19 @@ public class JwtUtil {
 
     }
 
+    public String resolveToken(String token) {
+        if (token != null && token.startsWith(jwtProperties.getTokenPrefix())) {
+            return token.substring(jwtProperties.getTokenPrefix().length());
+        }
+        return null;
+    }
+
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(jwtProperties.getTokenHeader());
         if (bearerToken != null && bearerToken.startsWith(jwtProperties.getTokenPrefix())) {
             return bearerToken.substring(jwtProperties.getTokenPrefix().length());
         }
         return null;
-
     }
 
     public boolean validateClaims(Claims claims) throws AuthenticationException {
@@ -95,4 +113,10 @@ public class JwtUtil {
         return resolveClaims(req).getSubject();
     }
 
+    @SneakyThrows
+    public JwtDto getJwtDto(String token) {
+        token = resolveToken(token);
+        String sub = resolveClaims(token).getSubject();
+        return mapper.readValue(sub, JwtDto.class);
+    }
 }

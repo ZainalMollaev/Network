@@ -23,8 +23,8 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void updateRefreshToken(String subject, String refreshToken) {
-        userRepository.updateRefreshByEmail(subject, refreshToken);
+    public void updateRefreshToken(String username, String refreshToken) {
+        userRepository.updateRefreshByEmail(username, refreshToken);
     }
 
     public String getRefreshTokenByEmail(String email) {

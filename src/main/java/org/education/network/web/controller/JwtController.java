@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.service.JwtService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,11 +27,11 @@ public class JwtController {
             summary = "get access token",
             description = "generate access token and get")
     @PostMapping("/accessToken")
-    public ResponseEntity getAccessToken(Principal principal) {
+    public ResponseEntity getAccessToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(false)
-                        .body(jwtService.updateAccess(principal))
+                        .body(jwtService.updateAccess(token))
                         .createdAt(Instant.now().toString())
                         .build()
         );
@@ -39,11 +41,11 @@ public class JwtController {
             summary = "get refresh token",
             description = "generate refresh token and save it")
     @PostMapping ("/refreshToken")
-    public ResponseEntity getRefreshToken(Principal principal) {
+    public ResponseEntity getRefreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
         return ResponseEntity.ok(
                 CommonResponse.builder()
                         .hasErrors(false)
-                        .body(jwtService.updateRefresh(principal.getName()))
+                        .body(jwtService.updateRefresh(token))
                         .createdAt(Instant.now().toString())
                         .build()
         );
