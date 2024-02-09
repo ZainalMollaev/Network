@@ -2,10 +2,9 @@ package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.DeleteMediaDto;
-import org.education.network.dto.request.MultipartDto;
+import org.education.network.dto.app.MultipartDto;
 import org.education.network.dto.request.UserMediaDto;
 import org.education.network.dto.response.CommonResponse;
-import org.education.network.enumtypes.Bucket;
 import org.education.network.mapping.MultipartFileMapper;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
@@ -28,14 +27,14 @@ public class MediaService {
 
     public ResponseEntity saveMedia(UserMediaDto userMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        MultipartDto multipartDto = null;
+        MultipartDto multipartDto;
         try {
-            multipartDto = fileMapper.toDto(userMediaDto.getFile());
+            multipartDto = fileMapper.toDto(userMediaDto.getFile(), userMediaDto.getBucket());
         } catch (IOException e) {
             throw new FileHandlerException(e);
         }
 
-        fileService.saveFile(Bucket.USERS.getBucket(), profile.getId().toString(), Collections.singletonList(multipartDto));
+        fileService.saveFile(userMediaDto.getBucket().getBucket(), profile.getId().toString(), Collections.singletonList(multipartDto));
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)
                         .body(userMediaDto.getFile().getOriginalFilename() + " successfully saved")

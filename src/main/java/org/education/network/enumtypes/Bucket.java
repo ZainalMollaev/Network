@@ -1,13 +1,21 @@
 package org.education.network.enumtypes;
 
+import lombok.Getter;
+
+@Getter
 public enum Bucket {
 
-    POSTS("posts"), USERS("users");
+    POSTS("post"), AVATAR("avatar"), BACKGROUND("background");
+
     private String bucket;
+
     Bucket(String bucket) {
         this.bucket = bucket;
     }
 
-    public String getBucket(){return bucket;}
+    @Override
+    public String toString() {
+        return bucket;
+    }
 
 }

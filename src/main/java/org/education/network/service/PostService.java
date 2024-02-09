@@ -2,7 +2,7 @@ package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.DeleteMediaDto;
-import org.education.network.dto.request.MultipartDto;
+import org.education.network.dto.app.MultipartDto;
 import org.education.network.dto.request.PostDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.enumtypes.Bucket;
@@ -31,7 +31,7 @@ public class PostService {
         postDto.setEmail(subject);
         Post savedPost = postRepository.save(postMapper.toEntity(postDto));
 
-        List<MultipartDto> multipartDtos = fileMapper.toDtoList(postDto.getFiles());
+        List<MultipartDto> multipartDtos = fileMapper.toDtoList(postDto.getFiles(), Bucket.POSTS);
 
         fileService.saveFile(Bucket.POSTS.getBucket(), savedPost.getId().toString(), multipartDtos);
 

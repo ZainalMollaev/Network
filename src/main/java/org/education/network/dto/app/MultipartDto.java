@@ -1,10 +1,11 @@
-package org.education.network.dto.request;
+package org.education.network.dto.app;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.education.network.enumtypes.Bucket;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.core.io.Resource;
 
@@ -27,15 +28,10 @@ public class MultipartDto {
     private String contentType;
     private InputStream inputStream;
     private long size;
+    private Bucket bucket;
 
     public InputStream getCloneInputStream() {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            this.inputStream.transferTo(baos);
-        } catch (IOException e) {
-            throw new FileHandlerException(e);
-        }
-        return new ByteArrayInputStream(baos.toByteArray());
+        return new ByteArrayInputStream(this.getBytes());
     }
 
 }
