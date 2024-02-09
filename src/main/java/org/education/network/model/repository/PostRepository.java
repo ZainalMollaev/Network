@@ -8,10 +8,17 @@ import java.util.List;
 import java.util.UUID;
 public interface PostRepository extends JpaRepository<Post, UUID> {
 
-    Post getPostById(String id);
+    Post getPostById(UUID id);
 
     @Query("SELECT up.posts " +
             "FROM UserProfile up " +
             "WHERE up.user.email = :email")
     List<Post> getPostsByEmail(String email);
+
+    @Query("SELECT p " +
+            "FROM Post p " +
+            "WHERE p.userProfile.user.email = :email " +
+            "ORDER BY p.creationDate " +
+            "LIMIT 4")
+    List<Post> getPostsByEmailFetchFirst(String email);
 }

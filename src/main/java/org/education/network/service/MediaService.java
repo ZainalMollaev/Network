@@ -2,15 +2,19 @@ package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.request.DeleteMediaDto;
+import org.education.network.dto.request.MultipartDto;
 import org.education.network.dto.request.UserMediaDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.enumtypes.Bucket;
+import org.education.network.mapping.MultipartFileMapper;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
+import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.Collections;
 
@@ -20,10 +24,18 @@ public class MediaService {
 
     private final UserProfileRepository repository;
     private final FileService fileService;
+    private final MultipartFileMapper fileMapper;
 
     public ResponseEntity saveMedia(UserMediaDto userMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        fileService.saveFile(Bucket.users.getBucket(), profile.getId(), Collections.singletonList(userMediaDto.getFile()));
+        MultipartDto multipartDto = null;
+        try {
+            multipartDto = fileMapper.toDto(userMediaDto.getFile());
+        } catch (IOException e) {
+            throw new FileHandlerException(e);
+        }
+
+        fileService.saveFile(Bucket.USERS.getBucket(), profile.getId().toString(), Collections.singletonList(multipartDto));
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)
                         .body(userMediaDto.getFile().getOriginalFilename() + " successfully saved")
@@ -33,7 +45,7 @@ public class MediaService {
 
     public ResponseEntity deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        fileService.deleteFile(Collections.singletonList(deleteMediaDto), profile.getId());
+        fileService.deleteFile(Collections.singletonList(deleteMediaDto), profile.getId().toString());
         return ResponseEntity.ok(CommonResponse.builder()
                 .hasErrors(false)
                 .body(deleteMediaDto.getFileName() + " successfully deleted")

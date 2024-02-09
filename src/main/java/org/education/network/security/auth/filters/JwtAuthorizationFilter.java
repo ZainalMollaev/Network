@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserDto;
 import org.education.network.dto.response.JwtDto;
+import org.education.network.enumtypes.Role;
 import org.education.network.properties.FilterProperties;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
@@ -46,10 +47,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             UserDto user = toUser(request);
             
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-
+            //todo исправить хардкод в role
             JwtDto jwtDto = JwtDto.builder()
                     .username(user.getEmail())
-                    .role(user.getRole())
+                    .role(Role.USER)
                     .build();
 
             accessToken = jwtUtil.createAccessToken(jwtDto);

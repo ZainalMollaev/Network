@@ -2,16 +2,16 @@ package org.education.network.service;
 
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
-import io.minio.ListObjectsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
-import io.minio.Result;
+import io.minio.StatObjectArgs;
+import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
-import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.education.network.enumtypes.Bucket;
 import org.education.network.properties.MinioAppProperties;
 import org.education.network.web.exceptions.BadMinioRequestException;
 import org.education.network.web.exceptions.FileHandlerException;
@@ -65,26 +65,24 @@ public class MinioService {
         }
     }
 
-    public InputStream getFile(String photoId) {
+    public InputStream getFile(Bucket bucket, String photoId) {
         try {
-            InputStream img = minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(properties.getBucket())
-                            .object(photoId)
-                            .build()
-            );
-            return img;
+            boolean objectExist = isObjectExist(bucket, photoId);
+            if(objectExist) {
+                return minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(bucket.getBucket())
+                                .object(photoId)
+                                .build()
+                );
+            }
+
+            return InputStream.nullInputStream();
         } catch (MinioException e) {
             throw new BadMinioRequestException(e);
         } catch (IOException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new FileHandlerException(e);
         }
-    }
-
-    public Iterable<Result<Item>> getAllObjects() {
-        return minioClient.listObjects(ListObjectsArgs.builder()
-                        .bucket(properties.getBucket())
-                .build());
     }
 
     private void createBucket() {
@@ -106,6 +104,21 @@ public class MinioService {
         }
     }
 
+    public boolean isObjectExist(Bucket bucket, String photoId) {
+        try {
+            minioClient.statObject(StatObjectArgs.builder()
+                    .bucket(bucket.getBucket())
+                    .object(photoId).build());
+            return true;
+        } catch (ErrorResponseException e) {
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @PostConstruct
     private void init() {
         minioClient =
@@ -122,3 +135,5 @@ public class MinioService {
     }
 
 }
+
+

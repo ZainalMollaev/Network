@@ -9,12 +9,15 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: true
   flyway:
     locations: classpath:/db/migration
     enabled: true
     baseline-on-migrate: true
+  servlet:
+    multipart:
+      max-file-size: 2MB
 
 properties:
   filter:
@@ -31,6 +34,32 @@ properties:
     avatarLink: avatar/
     userBucket: users
     postBucket: posts
+  file:
+    compresses:
+      - name: posts
+        width: 200
+        height: 200
+      - name: postsSub
+        width: 200
+        height: 200
+      - name: postsRecomendations
+        width: 200
+        height: 200
+      - name: avatar
+        width: 200
+        height: 200
+      - name: avatarMini
+        width: 200
+        height: 200
+      - name: avatarNotifications
+        width: 200
+        height: 200
+      - name: avatarCommonSubs
+        width: 200
+        height: 200
+      - name: background
+        width: 200
+        height: 200
   jwt:
     secretKey: IhiMjRKZAGO0ecKNUXCXull5zmYgsBKsI63uGB2aoSJFukFJaSvIZfI8ACvS
     accessTokenValidity: 2

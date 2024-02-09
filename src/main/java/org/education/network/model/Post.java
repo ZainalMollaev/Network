@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.education.network.model.profile.UserProfile;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -25,10 +26,11 @@ public class Post {
 
     @Id
     @Builder.Default
-    private String id = UUID.randomUUID().toString();
+    private UUID id = UUID.randomUUID();
     private String title;
     private String description;
     private String location;
+    private LocalDate creationDate;
 
     @ManyToOne
     @JoinColumn(name = "profile_id",

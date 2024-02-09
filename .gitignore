@@ -36,3 +36,9 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+*.meta
+format.json
+part.1
+/data/users/024b725d-6663-4418-9c59-1392c3284438/avatar/9c95c8f5-c769-4dd5-ad48-20fe59bba46d/part.1
+/data/.minio.sys/tmp/3081f4a6-4683-48e3-a87e-a5f01aa1d553

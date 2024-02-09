@@ -28,6 +28,7 @@ public class JwtUtil {
 
     private JwtParser jwtParser;
 
+    //todo исправить parser - deprecated
     @PostConstruct
     public void init() {
         this.jwtParser = Jwts.parser().setSigningKey(jwtProperties.getSecretKey());
@@ -40,7 +41,7 @@ public class JwtUtil {
 
         Instant tokenCreateTime = Instant.now().plus(tokenValidity, ChronoUnit.DAYS);
         Date validity = new Date(tokenCreateTime.toEpochMilli());
-
+        //todo signWith deprecated исправить
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(validity)

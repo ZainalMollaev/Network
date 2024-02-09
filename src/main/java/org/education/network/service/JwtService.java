@@ -14,7 +14,7 @@ public class JwtService {
 
     private final JwtUtil jwtUtil;
     private final UserService userService;
-    private ObjectMapper mapper;
+    private ObjectMapper mapper = new ObjectMapper();
 
     public JwtService(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
