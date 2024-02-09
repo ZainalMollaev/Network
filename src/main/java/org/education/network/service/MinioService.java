@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.properties.MinioAppProperties;
 import org.education.network.web.exceptions.BadMinioRequestException;
+import org.education.network.web.exceptions.CommonException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.stereotype.Service;
 
@@ -114,8 +115,7 @@ public class MinioService {
             log.debug(e.getMessage());
             return false;
         } catch (Exception e) {
-            //todo обработать это исключение
-            throw new RuntimeException(e.getMessage());
+            throw new CommonException(e.getMessage());
         }
     }
 

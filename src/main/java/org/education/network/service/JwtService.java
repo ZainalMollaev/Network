@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.education.network.dto.response.JwtDto;
 import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.response.JwtResponseDto;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -22,8 +23,8 @@ public class JwtService {
     }
 
     @SneakyThrows
-    public JwtResponseDto updateAccess(Principal principal) {
-        JwtDto jwtDto = mapper.readValue(principal.getName(), JwtDto.class);
+    public JwtResponseDto updateAccess(String token) {
+        JwtDto jwtDto = jwtUtil.getJwtDto(token);
         return JwtResponseDto.builder()
                 .accessToken(jwtUtil.createAccessToken(jwtDto))
                 .refreshToken(userService.getRefreshTokenByEmail(jwtDto.getUsername()))
@@ -31,10 +32,10 @@ public class JwtService {
     }
 
     @SneakyThrows
-    public JwtResponseDto updateRefresh(String subject) {
-        JwtDto jwtDto = mapper.readValue(subject, JwtDto.class);
+    public JwtResponseDto updateRefresh(String token) {
+        JwtDto jwtDto = jwtUtil.getJwtDto(token);
         String refreshToken = jwtUtil.createRefreshToken(jwtDto);
-        userService.updateRefreshToken(subject, refreshToken);
+        userService.updateRefreshToken(jwtDto.getUsername(), refreshToken);
 
         return JwtResponseDto.builder()
                 .accessToken(jwtUtil.createAccessToken(jwtDto))

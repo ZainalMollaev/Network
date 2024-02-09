@@ -17,6 +17,7 @@ import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.response.LoginRes;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -45,8 +46,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (accessToken == null) {
 
             UserDto user = toUser(request);
-            
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+
+            try{
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+            } catch (RuntimeException e){
+                throw new BadCredentialsException(e.getMessage());
+            }
+
             //todo исправить хардкод в role
             JwtDto jwtDto = JwtDto.builder()
                     .username(user.getEmail())
