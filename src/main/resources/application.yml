@@ -32,17 +32,19 @@ properties:
     secretToken: e9c8lPtMLbYgdYkcOGNcQxN3Y1mIdWQCvkwlDfVi
     backImgLink: backImg/
     avatarLink: avatar/
-    userBucket: users
-    postBucket: posts
+    buckets:
+      - post
+      - avatar
+      - background
   file:
     compresses:
-      - name: posts
+      - name: post
         width: 200
         height: 200
-      - name: postsSub
+      - name: postSub
         width: 200
         height: 200
-      - name: postsRecomendations
+      - name: postRecomendations
         width: 200
         height: 200
       - name: avatar

@@ -11,6 +11,7 @@ import io.minio.errors.ErrorResponseException;
 import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.properties.MinioAppProperties;
 import org.education.network.web.exceptions.BadMinioRequestException;
@@ -24,6 +25,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MinioService {
 
     private MinioClient minioClient;
@@ -87,15 +89,13 @@ public class MinioService {
 
     private void createBucket() {
         try {
-            boolean foundPerson =
-                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getUserBucket()).build());
-            boolean foundPost =
-                    minioClient.bucketExists(BucketExistsArgs.builder().bucket(properties.getPostBucket()).build());
-            if (!foundPerson) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(properties.getUserBucket()).build());
-            }
-            if (!foundPost) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(properties.getPostBucket()).build());
+
+            for (String bucket:
+                 properties.getBuckets()) {
+                boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
+                if (!found) {
+                    minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+                }
             }
         } catch (MinioException e) {
             throw new BadMinioRequestException(e);
@@ -111,10 +111,10 @@ public class MinioService {
                     .object(photoId).build());
             return true;
         } catch (ErrorResponseException e) {
-            e.printStackTrace();
+            log.debug(e.getMessage());
             return false;
         } catch (Exception e) {
-            e.printStackTrace();
+            //todo обработать это исключение
             throw new RuntimeException(e.getMessage());
         }
     }
