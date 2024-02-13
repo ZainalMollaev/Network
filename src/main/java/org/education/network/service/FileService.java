@@ -90,11 +90,16 @@ public class FileService {
 
     }
 
-    public void deleteFile(List<DeleteMediaDto> deleteMediaDto, String id) {
-        for (DeleteMediaDto file:
-                deleteMediaDto) {
-            minioService.deleteFile(file.getBucket(), id + "/" + file.getFileName());
-        }
+    public void deleteFile(DeleteMediaDto deleteMediaDto, String id) {
+
+        List<FileProperties.Compress> compresses = fileProperties.getProperCompress(deleteMediaDto.getBucket().getBucket());
+        compresses.forEach( compress -> {
+                    String path = id + "/" + compress.getName() + "/" + deleteMediaDto.getFileName();
+                    minioService.deleteFile(deleteMediaDto.getBucket(),
+                            path);
+                }
+        );
+
     }
 
 }

@@ -49,7 +49,7 @@ public class MediaService {
 
     public ResponseEntity deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
-        fileService.deleteFile(Collections.singletonList(deleteMediaDto), profile.getId().toString());
+        fileService.deleteFile(deleteMediaDto, profile.getId().toString());
         return ResponseEntity.ok(CommonResponse.builder()
                 .hasErrors(false)
                 .body(deleteMediaDto.getFileName() + " successfully deleted")
