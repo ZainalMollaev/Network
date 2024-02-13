@@ -4,7 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -28,8 +28,10 @@ import org.education.network.model.User;
 import org.education.network.model.profile.embedded.Education;
 import org.education.network.model.profile.embedded.LastJob;
 import org.education.network.model.profile.embedded.PersonMain;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.id.uuid.UuidGenerator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,18 +51,33 @@ import java.util.UUID;
                 })
         }
 )
+@NamedEntityGraph(
+        name = "saveUserProfile",
+        attributeNodes = {
+                @NamedAttributeNode(value = "languages"),
+                @NamedAttributeNode(value = "roles"),
+                @NamedAttributeNode(value = "personMain"),
+                @NamedAttributeNode(value = "lastjob"),
+                @NamedAttributeNode(value = "education"),
+                @NamedAttributeNode(value = "location"),
+                @NamedAttributeNode(value = "phoneNumber")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"subscribes", "languages", "posts", "roles"})
+@ToString(exclude = {"subscribes", "languages", "posts", "roles", "user"})
 @Builder
 @Entity
 public class UserProfile {
 
     @Id
-    @Builder.Default
-    private UUID id = UUID.randomUUID();
+    @GenericGenerator(
+            name = "UUID",
+            type = UuidGenerator.class
+    )
+    private UUID id;
     @Embedded
     private PersonMain personMain;
     @Embedded
@@ -87,12 +104,16 @@ public class UserProfile {
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
+    //todo сделать post lazy
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Builder.Default
     private Set<Post> posts = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST} )
+    //todo сделать subs lazy
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name="tbl_subscribers",
             joinColumns=@JoinColumn(name="profile_id"),
             inverseJoinColumns=@JoinColumn(name="subscriber_id"),
@@ -102,7 +123,7 @@ public class UserProfile {
     @Builder.Default
     private Set<UserProfile> subscribes = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
@@ -112,6 +133,4 @@ public class UserProfile {
     public void addSubscription(UserProfile subscriber) {
         this.subscribes.add(subscriber);
     }
-
-
 }

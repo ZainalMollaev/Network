@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.education.network.model.profile.UserProfile;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.id.uuid.UuidGenerator;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -25,8 +27,9 @@ import java.util.UUID;
 public class Post {
 
     @Id
-    @Builder.Default
-    private UUID id = UUID.randomUUID();
+    @GenericGenerator(name = "UUID",
+            type = UuidGenerator.class)
+    private UUID id;
     private String title;
     private String description;
     private String location;
