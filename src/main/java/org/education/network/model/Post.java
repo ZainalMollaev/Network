@@ -1,6 +1,7 @@
 package org.education.network.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -35,7 +36,7 @@ public class Post {
     private String location;
     private LocalDate creationDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id",
             nullable = false)
     private UserProfile userProfile;

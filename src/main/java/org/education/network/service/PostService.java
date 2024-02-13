@@ -28,7 +28,8 @@ public class PostService {
 
     public ResponseEntity createPost(PostDto postDto, String subject) {
         postDto.setEmail(subject);
-        Post savedPost = postRepository.save(postMapper.toEntity(postDto));
+        Post post = postMapper.toEntity(postDto);
+        Post savedPost = postRepository.save(post);
 
         List<MultipartDto> multipartDtos = fileMapper.toDtoList(postDto.getFiles(), Bucket.POSTS);
 

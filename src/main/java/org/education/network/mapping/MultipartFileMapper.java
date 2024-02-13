@@ -47,10 +47,15 @@ public abstract class MultipartFileMapper {
     @AfterMapping
     public void numberNames(List<MultipartFile> multipartFiles, @MappingTarget List<MultipartDto> multipartDtos) {
         for (int i = 0; i < multipartFiles.size(); i++) {
+            MultipartDto file = multipartDtos.get(i);
             if(i != 0) {
-                multipartDtos.get(i).setName(multipartDtos.get(i).getBucket().getBucket() + "-" + (i+1));
+                file.setOriginalFilename(file.getBucket().getBucket()
+                        + "-"
+                        + (i+1)
+                        + file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")));
             } else {
-                multipartDtos.get(0).setName(multipartDtos.get(i).getBucket().toString());
+                file.setOriginalFilename(multipartDtos.get(i).getBucket().toString()
+                        + file.getOriginalFilename().substring(file.getOriginalFilename().indexOf(".")));
             }
         }
     }
