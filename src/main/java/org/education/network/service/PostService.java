@@ -1,8 +1,8 @@
 package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.app.MultipartDto;
+import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.request.PostDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.enumtypes.Bucket;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,7 +60,7 @@ public class PostService {
 
     public ResponseEntity deleteFile(DeleteMediaDto deleteMediaDto, String subject) {
 
-        fileService.deleteFile(Collections.singletonList(deleteMediaDto), subject);
+        fileService.deleteFile(deleteMediaDto, subject);
 
         return ResponseEntity.ok(CommonResponse.builder()
                         .hasErrors(false)

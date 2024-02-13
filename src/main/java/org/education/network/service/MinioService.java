@@ -53,11 +53,11 @@ public class MinioService {
         }
     }
 
-    public void deleteFile(String bucket, String fileId) {
+    public void deleteFile(Bucket bucket, String fileId) {
         try {
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
-                            .bucket(bucket)
+                            .bucket(bucket.getBucket())
                             .object(fileId)
                             .build()
             );
