@@ -104,14 +104,10 @@ public class UserProfile {
     @Builder.Default
     private List<Role> roles = new ArrayList<>();
 
-    //todo сделать post lazy
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @Builder.Default
     private Set<Post> posts = new HashSet<>();
-
-    //todo сделать subs lazy
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name="tbl_subscribers",
