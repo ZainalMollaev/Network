@@ -68,14 +68,14 @@ public class MinioService {
         }
     }
 
-    public InputStream getFile(Bucket bucket, String photoId) {
+    public InputStream getFile(Bucket bucket, String path) {
         try {
-            boolean objectExist = isObjectExist(bucket, photoId);
+            boolean objectExist = isObjectExist(bucket, path);
             if(objectExist) {
                 return minioClient.getObject(
                         GetObjectArgs.builder()
                                 .bucket(bucket.getBucket())
-                                .object(photoId)
+                                .object(path)
                                 .build()
                 );
             }

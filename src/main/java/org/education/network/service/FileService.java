@@ -2,8 +2,8 @@ package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
-import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.app.MultipartDto;
+import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.properties.FileProperties;
 import org.education.network.web.exceptions.FileHandlerException;
@@ -26,9 +26,11 @@ public class FileService {
     private final FileProperties fileProperties;
 
     //todo Добавить bucket в сигнатуру
-    public byte[] getFile(String photoId) {
+    public byte[] getFile(Bucket bucket, String folder, String photoId) {
         try {
-            return minioService.getFile(Bucket.POSTS, photoId).readAllBytes();
+            return minioService.getFile(bucket,
+                                    photoId + "/" + folder + "/" + bucket.getBucket())
+                    .readAllBytes();
         } catch (IOException e) {
             throw new FileHandlerException(e);
         }
@@ -44,9 +46,9 @@ public class FileService {
         compresses.forEach(compress ->
                 multipartFiles.forEach(file -> {
 
-                    String fileName = file.getName();
+                    String fileName = file.getOriginalFilename().substring(0, file.getOriginalFilename().indexOf("."));
 
-                    if(!isAvatar(fileName, compress)) {
+                    if(!isNotMultiple(fileName, compress)) {
 
                         try (ByteArrayOutputStream ous = new ByteArrayOutputStream()) {
                             String extension = getFileExtension(file);
@@ -71,7 +73,7 @@ public class FileService {
         );
     }
 
-    private boolean isAvatar(String fileName, FileProperties.Compress compress){
+    private boolean isNotMultiple(String fileName, FileProperties.Compress compress){
         return fileName.matches("\\w+[-]\\d+") && !fileName.contains(compress.getName());
     }
 
