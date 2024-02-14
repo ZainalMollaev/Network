@@ -16,23 +16,29 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/subs")
+@RequestMapping("/subscribes")
 @Tag(name = "SubscribeController", description = "action with subscription")
 public class SubscribeController {
 
     private final ProfileService profileService;
 
     @Operation(summary = "add user subscription")
-    @PutMapping("/subscribe/user")
+    @PutMapping
     public ResponseEntity subscribe(@RequestParam("personEmail") String personEmail,
                                     Principal principal) {
         return profileService.subscribeUser(personEmail, principal.getName());
     }
 
     @Operation(summary = "get all user subscriptions")
-    @GetMapping("/subscriptions/user")
+    @GetMapping
     public ResponseEntity getAllUserSubscriptions(Principal principal, Pageable pageable) {
         return profileService.getAllUserSubscriptions(principal.getName(), pageable);
+    }
+
+    @Operation(summary = "find subscriptions or subscribers by string")
+    @GetMapping
+    public ResponseEntity findProperSubscriptionsOrSubscribersByString(Principal principal, @RequestParam String likePattern) {
+        return profileService.findProperSubscriptionsOrSubscribersByName(principal.getName(), likePattern);
     }
 
 }

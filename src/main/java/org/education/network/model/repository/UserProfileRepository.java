@@ -30,4 +30,28 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
                     "    and tbl.profile_id != subs.profile_id", nativeQuery = true)
     List<String> getCommonSubs(UUID id);
 
+    @Query(value = "with id_by_email as (\n" +
+                    "    SELECT u.id\n" +
+                    "    FROM users u\n" +
+                    "    WHERE u.email = :email\n" +
+                    ")\n" +
+                    "SELECT\n" +
+                    "    distinct  lastname, name, email\n" +
+                    "FROM id_by_email ibe\n" +
+                    "JOIN tbl_subscribers tbl\n" +
+                    "    ON tbl.profile_id = ibe.id or tbl.subscriber_id = ibe.id\n" +
+                    "JOIN user_profile up\n" +
+                    "    ON (tbl.profile_id = ibe.id AND tbl.subscriber_id = up.user_id) OR (tbl.subscriber_id = ibe.id AND tbl.profile_id = up.user_id)\n" +
+                    "JOIN users u ON up.user_id = u.id\n" +
+                    "WHERE concat(up.name, ' ', up.lastname) like :likePattern OR concat(up.lastname, ' ', up.name) like :likePattern \n",
+            nativeQuery = true)
+    List<NameOnly> findProperSubscriptionsOrSubscribersByName(String email, String likePattern);
+
+    public static interface NameOnly {
+
+        String getName();
+        String getLastname();
+        String getEmail();
+
+    }
 }

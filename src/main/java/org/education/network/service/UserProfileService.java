@@ -1,8 +1,8 @@
 package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.dto.bd.UserProfileDto;
+import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.mapping.SubscriptionMapper;
 import org.education.network.mapping.UserProfileMapper;
 import org.education.network.model.profile.UserProfile;
@@ -40,8 +40,7 @@ public class UserProfileService {
 
     public UserProfileDto getUserProfile(String email) {
         UserProfile userProfile = profileRepository.findByEmail(email);
-        UserProfileDto userProfileDto = profileMapper.toDto(userProfile);
-        return userProfileDto;
+        return profileMapper.toDto(userProfile);
     }
 
     @Transactional
@@ -52,7 +51,6 @@ public class UserProfileService {
         person.addSubscription(subscription);
     }
 
-    //todo доделать
     public List<SubscriptionDto> getAllUserSubscribers(String email, Pageable pageable) {
 
         Page<UserProfile> profile2 = profileRepository.findByEmailWithPage(email, pageable);
@@ -65,5 +63,16 @@ public class UserProfileService {
         }
 
         return list;
+    }
+
+    public List<UserProfileRepository.NameOnly> findProperSubscriptionsOrSubscribersByName(String username, String like) {
+
+        String likePattern =
+                new StringBuilder()
+                        .append("%")
+                        .append(like)
+                        .append("%").toString();
+
+        return profileRepository.findProperSubscriptionsOrSubscribersByName(username, likePattern);
     }
 }
