@@ -73,8 +73,6 @@ public class UserProfileService {
                         .append(like)
                         .append("%").toString();
 
-        List<UserProfileRepository.NameOnly> byEmail = profileRepository.findProperSubscriptionsOrSubscribersByName(username, likePattern);
-
-        return byEmail;
+        return profileRepository.findProperSubscriptionsOrSubscribersByName(username, likePattern);
     }
 }

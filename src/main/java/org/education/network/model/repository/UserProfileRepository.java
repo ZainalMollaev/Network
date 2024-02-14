@@ -50,27 +50,8 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     public static interface NameOnly {
 
         String getName();
-
         String getLastname();
-
         String getEmail();
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

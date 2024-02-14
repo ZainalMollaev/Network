@@ -35,9 +35,9 @@ public class SubscribeController {
         return profileService.getAllUserSubscriptions(principal.getName(), pageable);
     }
 
-    @Operation(summary = "")
-    @GetMapping("/subesAndSubs/user")
-    public ResponseEntity findProperSubscriptionsOrSubscribersByName(Principal principal, @RequestParam String likePattern) {
+    @Operation(summary = "find subscriptions or subscribers by string")
+    @GetMapping
+    public ResponseEntity findProperSubscriptionsOrSubscribersByString(Principal principal, @RequestParam String likePattern) {
         return profileService.findProperSubscriptionsOrSubscribersByName(principal.getName(), likePattern);
     }
 
