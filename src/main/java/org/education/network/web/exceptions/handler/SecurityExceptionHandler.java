@@ -1,10 +1,9 @@
 package org.education.network.web.exceptions.handler;
 
-import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.response.ErrorRes;
+import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.education.network.web.exceptions.BadMinioRequestException;
-import org.education.network.web.exceptions.CommonException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.education.network.web.exceptions.JwtException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class SecurityExceptionHandler {
-
+    //todo Сделать ошибку при запросе без токена
     @ExceptionHandler(value
             = { Exception.class })
     protected ResponseEntity<Object> commonException() {

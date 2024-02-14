@@ -35,4 +35,10 @@ public class SubscribeController {
         return profileService.getAllUserSubscriptions(principal.getName(), pageable);
     }
 
+    @Operation(summary = "")
+    @GetMapping("/subesAndSubs/user")
+    public ResponseEntity findProperSubscriptionsOrSubscribersByName(Principal principal, @RequestParam String likePattern) {
+        return profileService.findProperSubscriptionsOrSubscribersByName(principal.getName(), likePattern);
+    }
+
 }

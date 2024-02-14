@@ -45,4 +45,12 @@ public class ProfileService {
                 .build());
     }
 
+    //todo Сделать ResponseEntityUtil класс
+    public ResponseEntity findProperSubscriptionsOrSubscribersByName(String username, String likePattern) {
+        return ResponseEntity.ok(CommonResponse.builder()
+                .hasErrors(false)
+                .body(userProfileService.findProperSubscriptionsOrSubscribersByName(username, likePattern))
+                .build());
+    }
+
 }
