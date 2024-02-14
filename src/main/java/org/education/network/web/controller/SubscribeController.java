@@ -7,6 +7,7 @@ import org.education.network.service.ProfileService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,8 +37,8 @@ public class SubscribeController {
     }
 
     @Operation(summary = "find subscriptions or subscribers by string")
-    @GetMapping
-    public ResponseEntity findProperSubscriptionsOrSubscribersByString(Principal principal, @RequestParam String likePattern) {
+    @GetMapping("/{likePattern}")
+    public ResponseEntity findProperSubscriptionsOrSubscribersByString(Principal principal, @PathVariable String likePattern) {
         return profileService.findProperSubscriptionsOrSubscribersByName(principal.getName(), likePattern);
     }
 
