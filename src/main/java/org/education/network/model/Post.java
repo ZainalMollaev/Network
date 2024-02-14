@@ -1,6 +1,8 @@
 package org.education.network.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -11,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.education.network.enumtypes.Privacy;
 import org.education.network.model.profile.UserProfile;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.id.uuid.UuidGenerator;
@@ -35,6 +38,8 @@ public class Post {
     private String description;
     private String location;
     private LocalDate creationDate;
+    @Enumerated(EnumType.STRING)
+    private Privacy privacy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id",
