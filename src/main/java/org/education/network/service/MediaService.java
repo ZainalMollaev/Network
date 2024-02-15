@@ -9,7 +9,7 @@ import org.education.network.dto.response.CommonResponse;
 import org.education.network.mapping.MultipartFileMapper;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
-import org.education.network.security.auth.JwtUtil;
+import org.education.network.util.JwtUtil;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

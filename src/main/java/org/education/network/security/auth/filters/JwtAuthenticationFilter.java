@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.education.network.dto.response.JwtDto;
-import org.education.network.security.auth.JwtUtil;
+import org.education.network.util.JwtUtil;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
