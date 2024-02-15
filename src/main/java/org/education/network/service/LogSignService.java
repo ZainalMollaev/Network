@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.util.ResponseEntityUtil;
+import org.education.network.web.exceptions.WrongJsonException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class LogSignService {
         try {
             response = mapper.readValue(request, CommonResponse.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new WrongJsonException(e);
         }
         return ResponseEntityUtil.get(HttpStatus.OK, response);
     }
