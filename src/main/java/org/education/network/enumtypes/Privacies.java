@@ -1,12 +1,12 @@
 package org.education.network.enumtypes;
 
-public enum Privacy {
+public enum Privacies {
 
     ALL("all"), SUBSCRIBERS("subscribers"), ONLYME("only_me");
 
     private final String privacy;
 
-    Privacy(String privacy) {
+    Privacies(String privacy) {
         this.privacy = privacy;
     }
 }

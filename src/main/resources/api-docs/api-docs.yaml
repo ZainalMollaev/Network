@@ -1,25 +1,47 @@
 openapi: 3.0.1
-info:
-  title: Spring Boot 3 + Open API 3
-  description: Spring Boot 3 + Open API 3
-  contact:
-    name: Niket Agrawal
-    email: niket.agrawal90@gmail.com
-  license:
-    name: Apache 2.0
-    url: http://springdoc.org
-  version: V1.0.0
 servers:
 - url: http://localhost:8080
-  description: Localhost Server URL
+  description: Generated server url
+tags:
+- name: JwtController
+  description: Operations with jwt
+- name: ProfileController
+  description: operations with profile
+- name: PostController
+  description: crud of post
+- name: AuthController
+  description: Registration and Authorization
+- name: SubscribeController
+  description: action with subscription
+- name: MediaController
+  description: CRUD of media
 paths:
-  /media/picture:
+  /subscribes:
     get:
       tags:
-      - media-controller
-      operationId: getPicture
+      - SubscribeController
+      summary: get all user subscriptions
+      operationId: getAllUserSubscriptions
       parameters:
-      - name: fileId
+      - name: pageable
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/Pageable'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+    put:
+      tags:
+      - SubscribeController
+      summary: add user subscription
+      operationId: subscribe
+      parameters:
+      - name: personEmail
         in: query
         required: true
         schema:
@@ -31,15 +53,54 @@ paths:
             '*/*':
               schema:
                 type: string
+  /profile/edit:
+    put:
+      tags:
+      - ProfileController
+      summary: edit profile
+      description: edit all fields
+      operationId: editProfile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /post/create:
     post:
       tags:
-      - media-controller
+      - PostController
+      operationId: createPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostDto'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /media/file:
+    post:
+      tags:
+      - MediaController
+      summary: save avatar or backImg
       operationId: savePicture
       requestBody:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MediaDto'
+              $ref: '#/components/schemas/UserMediaDto'
       responses:
         "200":
           description: OK
@@ -49,13 +110,14 @@ paths:
                 type: string
     delete:
       tags:
-      - media-controller
-      operationId: deletePicture
+      - MediaController
+      summary: delete user profile file
+      operationId: deletePicture_1
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MediaDto'
+              $ref: '#/components/schemas/DeleteMediaDto'
         required: true
       responses:
         "200":
@@ -67,14 +129,16 @@ paths:
   /jwt/refreshToken:
     post:
       tags:
-      - jwt-controller
+      - JwtController
+      summary: get refresh token
+      description: generate refresh token and save it
       operationId: getRefreshToken
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserDto'
+      parameters:
+      - name: Authorization
+        in: header
         required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -85,14 +149,16 @@ paths:
   /jwt/accessToken:
     post:
       tags:
-      - jwt-controller
+      - JwtController
+      summary: get access token
+      description: generate access token and get
       operationId: getAccessToken
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserDto'
+      parameters:
+      - name: Authorization
+        in: header
         required: true
+        schema:
+          type: string
       responses:
         "200":
           description: OK
@@ -103,7 +169,9 @@ paths:
   /auth/signup:
     post:
       tags:
-      - auth-controller
+      - AuthController
+      summary: Registration/Signup
+      description: save login and credentials
       operationId: registerUser
       requestBody:
         content:
@@ -121,8 +189,26 @@ paths:
   /auth/login:
     post:
       tags:
-      - auth-controller
+      - AuthController
+      summary: Authorization/Login
+      description: check if access token is right
       operationId: login
+      parameters:
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
       responses:
         "200":
           description: OK
@@ -130,13 +216,14 @@ paths:
             '*/*':
               schema:
                 type: string
-  /media/picture/{email}:
+  /subscribes/{likePattern}:
     get:
       tags:
-      - media-controller
-      operationId: getPictureId
+      - SubscribeController
+      summary: find subscriptions or subscribers by string
+      operationId: findProperSubscriptionsOrSubscribersByString
       parameters:
-      - name: email
+      - name: likePattern
         in: path
         required: true
         schema:
@@ -148,29 +235,105 @@ paths:
             '*/*':
               schema:
                 type: string
+  /profile:
+    get:
+      tags:
+      - ProfileController
+      summary: get profile
+      description: get all fields
+      operationId: getProfileEmail
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /post:
+    get:
+      tags:
+      - PostController
+      operationId: getAllPostsByEmail
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /post/{postId}:
+    get:
+      tags:
+      - PostController
+      operationId: getPost
+      parameters:
+      - name: postId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /media/picture:
+    get:
+      tags:
+      - MediaController
+      summary: get picture
+      description: Get picture itself
+      operationId: getPicture
+      parameters:
+      - name: bucket
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - post
+          - avatar
+          - background
+      - name: folder
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /post/file:
+    delete:
+      tags:
+      - PostController
+      summary: delete user profile file
+      operationId: deletePicture
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteMediaDto'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
 components:
   schemas:
-    MediaDto:
-      type: object
-      properties:
-        file:
-          type: string
-          format: binary
-        email:
-          type: string
-        fileId:
-          type: string
-        fileType:
-          type: string
-    UserDto:
-      type: object
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        refreshToken:
-          type: string
     UserProfileDto:
       type: object
       properties:
@@ -180,6 +343,8 @@ components:
           type: string
         refreshToken:
           type: string
+        role:
+          type: string
         name:
           type: string
         lastname:
@@ -187,7 +352,7 @@ components:
         birthDate:
           type: string
         gender:
-          type: boolean
+          type: string
         title:
           type: string
         company:
@@ -198,9 +363,80 @@ components:
           type: string
         location:
           type: string
+        languages:
+          type: array
+          items:
+            type: string
         avatar:
           type: string
         backPhoto:
           type: string
         phoneNumber:
           type: string
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+            - ADMIN
+            - USER
+    PostDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        email:
+          type: string
+        location:
+          type: string
+        creationDate:
+          type: string
+          format: date
+        files:
+          type: array
+          items:
+            type: string
+            format: binary
+    UserMediaDto:
+      type: object
+      properties:
+        bucket:
+          type: string
+          enum:
+          - post
+          - avatar
+          - background
+        file:
+          type: string
+          format: binary
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+    DeleteMediaDto:
+      type: object
+      properties:
+        fileName:
+          type: string
+        bucket:
+          type: string
+          enum:
+          - post
+          - avatar
+          - background

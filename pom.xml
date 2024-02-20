@@ -109,7 +109,7 @@
             <version>${jwt.version}</version>
         </dependency>
 
-<!--        lombok mapstruct-->
+        <!--        lombok mapstruct-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -127,6 +127,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
             <version>${lombok-mapstruct-binding.version}</version>
+        </dependency>
+
+        <!--        microservices-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+            <version>3.1.0</version>
         </dependency>
 
         <!--        optional-->

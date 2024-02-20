@@ -1,11 +1,12 @@
 package org.education.network.model.repository;
 
-import org.education.network.model.Post;
+import org.education.network.model.post.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.UUID;
+
 public interface PostRepository extends JpaRepository<Post, UUID> {
 
     Post getPostById(UUID id);
@@ -21,4 +22,5 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             "ORDER BY p.creationDate " +
             "LIMIT 4")
     List<Post> getPostsByEmailFetchFirst(String email);
+
 }

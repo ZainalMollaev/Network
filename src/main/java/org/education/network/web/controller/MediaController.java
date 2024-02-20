@@ -8,7 +8,9 @@ import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.request.UserMediaDto;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.service.MediaService;
+import org.education.network.util.ResponseEntityUtil;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,14 +38,14 @@ public class MediaController {
             summary = "save avatar or backImg")
     @PostMapping(value = "/file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity savePicture(@ModelAttribute UserMediaDto userMediaDto, Principal principal) {
-        return mediaService.saveMedia(userMediaDto, principal.getName());
+        return ResponseEntityUtil.get(HttpStatus.OK, mediaService.saveMedia(userMediaDto, principal.getName()));
     }
 
     @Operation(
             summary = "delete user profile file")
     @DeleteMapping(value = "/file")
     public ResponseEntity deletePicture(@RequestBody DeleteMediaDto deleteMediaDto, Principal principal) {
-        return mediaService.deleteMedia(deleteMediaDto, principal.getName());
+        return ResponseEntityUtil.get(HttpStatus.OK, mediaService.deleteMedia(deleteMediaDto, principal.getName()));
     }
 
     @Operation(
@@ -53,7 +55,7 @@ public class MediaController {
     public ResponseEntity getPicture(@RequestParam("bucket") Bucket bucket,
                                      @RequestParam("folder") String folder,
                                      @RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
-        return mediaService.getPicture(new ContentDto(bucket, folder, token));
+        return ResponseEntityUtil.get(HttpStatus.OK, mediaService.getPicture(new ContentDto(bucket, folder, token)));
     }
 
 }

@@ -26,10 +26,10 @@ public class UserProfileService {
     private final UserProfileMapper profileMapper;
     private final SubscriptionMapper subscriptionMapper;
 
-    public void saveUserProfile(UserProfileDto user) {
+    public UserProfile saveUserProfile(UserProfileDto user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserProfile userAndProfile = profileMapper.toEntity(user);
-        profileRepository.save(userAndProfile);
+        return profileRepository.save(userAndProfile);
     }
 
     public void saveUserProfileByEmail(UserProfileDto userProfileDto) {
@@ -38,8 +38,12 @@ public class UserProfileService {
         profileRepository.save(userProfile);
     }
 
-    public UserProfileDto getUserProfile(String email) {
-        UserProfile userProfile = profileRepository.findByEmail(email);
+    public UserProfile getUserProfile(String username) {
+        return profileRepository.findByEmail(username);
+    }
+
+    public UserProfileDto getUserProfileDto(String username) {
+        UserProfile userProfile = profileRepository.findByEmail(username);
         return profileMapper.toDto(userProfile);
     }
 

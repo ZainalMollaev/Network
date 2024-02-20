@@ -4,6 +4,7 @@ import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.response.ErrorRes;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
 import org.education.network.web.exceptions.BadMinioRequestException;
+import org.education.network.web.exceptions.EmailExistException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.education.network.web.exceptions.JwtException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
@@ -26,6 +27,19 @@ public class SecurityExceptionHandler {
         ErrorRes errorResponse = new ErrorRes(
                 "Bad Request",
                 "Wrong Json");
+
+        return ResponseEntity.status(404).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body(errorResponse)
+                .build());
+    }
+
+    @ExceptionHandler(value
+            = { EmailExistException.class })
+    protected ResponseEntity<Object> existingEmail() {
+        ErrorRes errorResponse = new ErrorRes(
+                "Bad Request",
+                "Email is already exist!");
 
         return ResponseEntity.status(404).body(CommonResponse.builder()
                 .hasErrors(true)

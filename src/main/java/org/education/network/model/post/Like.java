@@ -1,49 +1,46 @@
-package org.education.network.model;
+package org.education.network.model.post;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.enumtypes.Privacy;
 import org.education.network.model.profile.UserProfile;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.id.uuid.UuidGenerator;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = {"post", "userProfile"})
 @Entity
-public class Post {
+@Table(name = "likes",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"}))
+public class Like {
 
     @Id
     @GenericGenerator(name = "UUID",
             type = UuidGenerator.class)
     private UUID id;
-    private String title;
-    private String description;
-    private String location;
-    private LocalDate creationDate;
-    @Enumerated(EnumType.STRING)
-    private Privacy privacy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id",
-            nullable = false)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserProfile userProfile;
 
 }
