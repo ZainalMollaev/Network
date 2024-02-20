@@ -1,12 +1,12 @@
 package org.education.network.enumtypes;
 
-public enum LikeAct {
+public enum LikeAction {
 
-    PLUS("plus"), MINUS("minus");
+    LIKE("like"), DISLIKE("dislike");
 
     private final String act;
 
-    LikeAct(String act) {
+    LikeAction(String act) {
         this.act = act;
     }
 
@@ -15,3 +15,4 @@ public enum LikeAct {
     }
 
 }
+
