@@ -37,13 +37,13 @@ public class MediaService {
                 profile.getId().toString(),
                 Collections.singletonList(multipartDto));
 
-        return userMediaDto.getFile().getOriginalFilename() + " successfully saved";
+        return "";
     }
 
     public String deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
         fileService.deleteFile(deleteMediaDto, profile.getId().toString());
-        return deleteMediaDto.getFileName() + " successfully deleted";
+        return "";
     }
 
     public byte[] getPicture(ContentDto contentDto) {
