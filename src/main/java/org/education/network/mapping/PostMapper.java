@@ -1,7 +1,7 @@
 package org.education.network.mapping;
 
 import org.education.network.dto.request.PostDto;
-import org.education.network.model.Post;
+import org.education.network.model.post.Post;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
 import org.mapstruct.Mapper;

@@ -9,10 +9,7 @@ import org.education.network.mapping.MultipartFileMapper;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
 import org.education.network.util.JwtUtil;
-import org.education.network.util.ResponseEntityUtil;
 import org.education.network.web.exceptions.FileHandlerException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,7 +24,7 @@ public class MediaService {
     private final MultipartFileMapper fileMapper;
     private final JwtUtil jwtUtil;
 
-    public ResponseEntity saveMedia(UserMediaDto userMediaDto, String subject) {
+    public String saveMedia(UserMediaDto userMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
         MultipartDto multipartDto;
         try {
@@ -39,23 +36,24 @@ public class MediaService {
         fileService.saveFile(userMediaDto.getBucket().getBucket(),
                 profile.getId().toString(),
                 Collections.singletonList(multipartDto));
-        return ResponseEntityUtil.get(HttpStatus.OK, userMediaDto.getFile().getOriginalFilename() + " successfully saved");
+
+        return "";
     }
 
-    public ResponseEntity deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
+    public String deleteMedia(DeleteMediaDto deleteMediaDto, String subject) {
         UserProfile profile = repository.findByEmail(subject);
         fileService.deleteFile(deleteMediaDto, profile.getId().toString());
-        return ResponseEntityUtil.get(HttpStatus.OK, deleteMediaDto.getFileName() + " successfully deleted");
+        return "";
     }
 
-    public ResponseEntity getPicture(ContentDto contentDto) {
+    public byte[] getPicture(ContentDto contentDto) {
         String id = repository
                 .findByEmail(jwtUtil.getJwtDto(contentDto.getToken()).getUsername())
                 .getId()
                 .toString();
 
-        return ResponseEntityUtil.get(HttpStatus.OK, fileService.getFile(contentDto.getBucket(),
+        return fileService.getFile(contentDto.getBucket(),
                 contentDto.getFolder(),
-                id));
+                id);
     }
 }

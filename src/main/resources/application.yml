@@ -72,3 +72,4 @@ properties:
 springdoc:
   api-docs:
     path: /api-docs
+

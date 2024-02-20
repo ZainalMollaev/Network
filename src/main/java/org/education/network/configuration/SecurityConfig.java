@@ -1,10 +1,10 @@
 package org.education.network.configuration;
 
 import lombok.extern.slf4j.Slf4j;
-import org.education.network.security.auth.filters.JwtAuthorizationFilter;
 import org.education.network.security.auth.filters.JwtAuthenticationFilter;
-import org.education.network.web.exceptions.SecurityFilterChainException;
+import org.education.network.security.auth.filters.JwtAuthorizationFilter;
 import org.education.network.service.CustomUserDetailsService;
+import org.education.network.web.exceptions.SecurityFilterChainException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +41,7 @@ public class SecurityConfig  {
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(authorize ->
                     authorize
-                            .requestMatchers("/auth/**", "/swagger-ui/index.html").permitAll()
+                            .requestMatchers("/auth/**", "/swagger-ui/*").permitAll()
                             .anyRequest().authenticated()
             ).sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

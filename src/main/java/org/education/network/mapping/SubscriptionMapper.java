@@ -2,8 +2,8 @@ package org.education.network.mapping;
 
 import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.enumtypes.Bucket;
-import org.education.network.model.Post;
 import org.education.network.model.User;
+import org.education.network.model.post.Post;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.PostRepository;
 import org.education.network.model.repository.UserProfileRepository;

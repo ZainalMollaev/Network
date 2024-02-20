@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.education.network.dto.bd.UserDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.response.JwtDto;
@@ -37,6 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final ObjectMapper mapper;
 
     @Override
+    @SneakyThrows
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) {
@@ -63,7 +65,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String refreshToken = jwtUtil.createRefreshToken(jwtDto);
             user.setRefreshToken(refreshToken);
             userService.updateRefreshToken(user.getEmail(), refreshToken);
-
             request.setAttribute(properties.getAttributeName(), CommonResponse.builder()
                     .hasErrors(false)
                     .body(

@@ -22,9 +22,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.education.network.model.Post;
 import org.education.network.model.Role;
 import org.education.network.model.User;
+import org.education.network.model.post.Post;
 import org.education.network.model.profile.embedded.Education;
 import org.education.network.model.profile.embedded.LastJob;
 import org.education.network.model.profile.embedded.PersonMain;
@@ -88,6 +88,16 @@ public class UserProfile {
     @Column(unique = true, nullable = false)
     private String phoneNumber;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @Builder.Default
+    private Set<Post> posts = new HashSet<>();
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_profile_language",
@@ -95,19 +105,6 @@ public class UserProfile {
             inverseJoinColumns = @JoinColumn(name = "language_id"))
     @Builder.Default
     private Set<Language> languages = new HashSet<>();
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_profile_roles",
-                joinColumns = @JoinColumn(name = "profile_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"),
-                uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id","role_id"}))
-    @Builder.Default
-    private List<Role> roles = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userProfile", orphanRemoval = true)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @Builder.Default
-    private Set<Post> posts = new HashSet<>();
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name="tbl_subscribers",
@@ -119,10 +116,13 @@ public class UserProfile {
     @Builder.Default
     private Set<UserProfile> subscribes = new HashSet<>();
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_profile_roles",
+                joinColumns = @JoinColumn(name = "profile_id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id"),
+                uniqueConstraints = @UniqueConstraint(columnNames = {"profile_id","role_id"}))
+    @Builder.Default
+    private List<Role> roles = new ArrayList<>();
 
     //todo Реализовать количество подписчиков и количество подписок
 

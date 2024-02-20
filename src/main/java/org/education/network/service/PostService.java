@@ -7,11 +7,8 @@ import org.education.network.dto.request.PostDto;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.mapping.MultipartFileMapper;
 import org.education.network.mapping.PostMapper;
-import org.education.network.model.Post;
+import org.education.network.model.post.Post;
 import org.education.network.model.repository.PostRepository;
-import org.education.network.util.ResponseEntityUtil;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,7 +23,7 @@ public class PostService {
     private final FileService fileService;
     private final MultipartFileMapper fileMapper;
 
-    public ResponseEntity createPost(PostDto postDto, String subject) {
+    public String createPost(PostDto postDto, String subject) {
         postDto.setEmail(subject);
         Post post = postMapper.toEntity(postDto);
         Post savedPost = postRepository.save(post);
@@ -35,22 +32,28 @@ public class PostService {
 
         fileService.saveFile(Bucket.POSTS.getBucket(), savedPost.getId().toString(), multipartDtos);
 
-        return ResponseEntityUtil.get(HttpStatus.OK, "Post has created");
+        return "Post has created";
     }
 
-    public ResponseEntity getAllPostsByEmail(String email) {
-        List<Post> posts = postRepository.getPostsByEmail(email);
-        return ResponseEntityUtil.get(HttpStatus.OK, postMapper.postDtoList(posts));
+    public List<Post> getAllPostsByEmail(String email) {
+        return postRepository.getPostsByEmail(email);
     }
 
-    public ResponseEntity getPost(UUID postId) {
-        Post post = postRepository.getPostById(postId);
-        PostDto postDto = postMapper.toDto(post);
-        return ResponseEntityUtil.get(HttpStatus.OK, postDto);
+    public List<PostDto> getAllPostsDtoByEmail(String email) {
+        return postMapper.postDtoList(getAllPostsByEmail(email));
     }
 
-    public ResponseEntity deleteFile(DeleteMediaDto deleteMediaDto, String subject) {
+    public PostDto getPostDto(UUID postId) {
+        return postMapper.toDto(getPost(postId));
+    }
+
+    public Post getPost(UUID postId) {
+        return postRepository.getPostById(postId);
+    }
+
+    public String deleteFile(DeleteMediaDto deleteMediaDto, String subject) {
         fileService.deleteFile(deleteMediaDto, subject);
-        return ResponseEntityUtil.get(HttpStatus.OK, "successfully deleted");
+        return deleteMediaDto.getFileName() + " successfully deleted";
     }
+
 }
