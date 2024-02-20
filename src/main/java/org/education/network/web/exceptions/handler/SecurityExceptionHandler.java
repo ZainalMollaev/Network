@@ -7,6 +7,7 @@ import org.education.network.web.exceptions.BadMinioRequestException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.education.network.web.exceptions.JwtException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
+import org.education.network.web.exceptions.WrongJsonException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class SecurityExceptionHandler {
     //todo Сделать ошибку при запросе без токена
+
+    @ExceptionHandler(value
+            = { WrongJsonException.class })
+    protected ResponseEntity<Object> wrongJson() {
+        ErrorRes errorResponse = new ErrorRes(
+                "Bad Request",
+                "Wrong Json");
+
+        return ResponseEntity.status(404).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body(errorResponse)
+                .build());
+    }
+
     @ExceptionHandler(value
             = { Exception.class })
     protected ResponseEntity<Object> commonException() {

@@ -3,17 +3,15 @@ package org.education.network.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.response.CommonResponse;
 import org.education.network.service.JwtService;
+import org.education.network.util.ResponseEntityUtil;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.security.Principal;
-import java.time.Instant;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,13 +26,7 @@ public class JwtController {
             description = "generate access token and get")
     @PostMapping("/accessToken")
     public ResponseEntity getAccessToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(
-                CommonResponse.builder()
-                        .hasErrors(false)
-                        .body(jwtService.updateAccess(token))
-                        .createdAt(Instant.now().toString())
-                        .build()
-        );
+        return ResponseEntityUtil.get(HttpStatus.OK, jwtService.updateAccess(token));
     }
 
     @Operation(
@@ -42,13 +34,7 @@ public class JwtController {
             description = "generate refresh token and save it")
     @PostMapping ("/refreshToken")
     public ResponseEntity getRefreshToken(@RequestHeader(name = HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(
-                CommonResponse.builder()
-                        .hasErrors(false)
-                        .body(jwtService.updateRefresh(token))
-                        .createdAt(Instant.now().toString())
-                        .build()
-        );
+        return ResponseEntityUtil.get(HttpStatus.OK, jwtService.updateRefresh(token));
     }
 
 }

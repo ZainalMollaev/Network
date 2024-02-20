@@ -1,21 +1,16 @@
 package org.education.network.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.education.network.dto.response.JwtDto;
-import org.education.network.security.auth.JwtUtil;
 import org.education.network.dto.response.JwtResponseDto;
-import org.springframework.security.core.Authentication;
+import org.education.network.util.JwtUtil;
 import org.springframework.stereotype.Service;
-
-import java.security.Principal;
 
 @Service
 public class JwtService {
 
     private final JwtUtil jwtUtil;
     private final UserService userService;
-    private ObjectMapper mapper = new ObjectMapper();
 
     public JwtService(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;

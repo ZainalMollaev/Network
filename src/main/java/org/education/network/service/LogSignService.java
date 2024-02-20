@@ -3,12 +3,13 @@ package org.education.network.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.bd.UserProfileDto;
+import org.education.network.dto.response.CommonResponse;
+import org.education.network.util.ResponseEntityUtil;
+import org.education.network.web.exceptions.WrongJsonException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -23,28 +24,20 @@ public class LogSignService {
         try {
             response = mapper.readValue(request, CommonResponse.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new WrongJsonException(e);
         }
-        return ResponseEntity.ok(response);
+        return ResponseEntityUtil.get(HttpStatus.OK, response);
     }
 
     public ResponseEntity<?> registerUser(UserProfileDto signUp) {
 
         if(userService.existsByEmail(signUp.getEmail())){
-            return ResponseEntity.badRequest().body(CommonResponse.builder()
-                    .hasErrors(false)
-                    .body("Email is already exist!")
-                    .createdAt(Instant.now().toString())
-                    .build());
+            return ResponseEntityUtil.get(HttpStatus.BAD_REQUEST, "Email is already exist!");
         }
 
         profileService.saveUserProfile(signUp);
 
-        return ResponseEntity.ok(CommonResponse.builder()
-                .hasErrors(false)
-                .body("User is registered successfully!")
-                .createdAt(Instant.now().toString())
-                .build());
+        return ResponseEntityUtil.get(HttpStatus.OK, "User is registered successfully!");
 
     }
 }

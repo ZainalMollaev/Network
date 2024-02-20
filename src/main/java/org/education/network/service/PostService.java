@@ -4,16 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.dto.app.MultipartDto;
 import org.education.network.dto.request.DeleteMediaDto;
 import org.education.network.dto.request.PostDto;
-import org.education.network.dto.response.CommonResponse;
 import org.education.network.enumtypes.Bucket;
 import org.education.network.mapping.MultipartFileMapper;
 import org.education.network.mapping.PostMapper;
 import org.education.network.model.Post;
 import org.education.network.model.repository.PostRepository;
+import org.education.network.util.ResponseEntityUtil;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,37 +35,22 @@ public class PostService {
 
         fileService.saveFile(Bucket.POSTS.getBucket(), savedPost.getId().toString(), multipartDtos);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntityUtil.get(HttpStatus.OK, "Post has created");
     }
 
     public ResponseEntity getAllPostsByEmail(String email) {
-
         List<Post> posts = postRepository.getPostsByEmail(email);
-        return ResponseEntity.ok(CommonResponse.builder()
-                .hasErrors(false)
-                .body(postMapper.postDtoList(posts))
-                .createdAt(Instant.now().toString())
-            .build());
-
+        return ResponseEntityUtil.get(HttpStatus.OK, postMapper.postDtoList(posts));
     }
 
     public ResponseEntity getPost(UUID postId) {
         Post post = postRepository.getPostById(postId);
         PostDto postDto = postMapper.toDto(post);
-        return ResponseEntity.ok().body(CommonResponse.builder()
-                .hasErrors(false)
-                .body(postDto)
-                .createdAt(Instant.now().toString())
-                .build());
+        return ResponseEntityUtil.get(HttpStatus.OK, postDto);
     }
 
     public ResponseEntity deleteFile(DeleteMediaDto deleteMediaDto, String subject) {
-
         fileService.deleteFile(deleteMediaDto, subject);
-
-        return ResponseEntity.ok(CommonResponse.builder()
-                        .hasErrors(false)
-                        .body(deleteMediaDto.getFileName() + " successfully deleted")
-                .build());
+        return ResponseEntityUtil.get(HttpStatus.OK, "successfully deleted");
     }
 }
