@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.education.network.model.profile.UserProfile;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.id.uuid.UuidGenerator;
 
 import java.util.UUID;
 
@@ -31,8 +29,7 @@ import java.util.UUID;
 public class Like {
 
     @Id
-    @GenericGenerator(name = "UUID",
-            type = UuidGenerator.class)
+    @org.hibernate.annotations.UuidGenerator
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
