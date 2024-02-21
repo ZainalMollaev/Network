@@ -16,6 +16,13 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
             "WHERE up.user.email = :email")
     UserProfile findByEmail(String email);
 
+    @Query("SELECT count(up.id) = 1 " +
+            "FROM UserProfile up " +
+            "WHERE up.user.email = :email")
+    Boolean existsByEmail(String email);
+
+    Boolean existsByPhoneNumber(String number);
+
     @Query("SELECT up.subscribes " +
             "FROM UserProfile up " +
             "WHERE up.user.email = :email ")
