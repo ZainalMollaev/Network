@@ -19,13 +19,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
 
-    private static String FILE_DELIMETER = "/";
+    private final static String FILE_DELIMETER = "/";
 
-    //todo ошибка если пытаются добавить файл а пользователя такого нет
     private final MinioService minioService;
     private final FileProperties fileProperties;
 
-    //todo Добавить bucket в сигнатуру
     public byte[] getFile(Bucket bucket, String folder, String photoId) {
         try {
             return minioService.getFile(bucket,
@@ -35,7 +33,6 @@ public class FileService {
             throw new FileHandlerException(e);
         }
     }
-
 
     //todo сделать exception на превышение размера файла
     @Async

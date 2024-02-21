@@ -34,9 +34,8 @@ public abstract class MultipartFileMapper {
         return toDto(multipartFile, bucket);
     }
 
-    //todo нормально обработать exception
     public InputStream cloneInputStream(InputStream inputStream) {
-        try(ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
+        try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             inputStream.transferTo(baos);
             return new ByteArrayInputStream(baos.toByteArray());
         } catch (IOException e) {

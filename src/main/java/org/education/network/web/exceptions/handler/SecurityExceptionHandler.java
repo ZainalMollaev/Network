@@ -140,7 +140,5 @@ public class SecurityExceptionHandler {
 
     }
 
-    //todo Добавить InternalAuthenticationServiceException при неправильном логине или пароле
     //todo AuthenticationNetworkException Такой номер уже есть
-    //todo Вынести в общий класс
 }
