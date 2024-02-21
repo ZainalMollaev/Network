@@ -14,6 +14,7 @@ import org.education.network.web.exceptions.JwtException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -31,10 +32,12 @@ public class JwtUtil {
 
     private JwtParser jwtParser;
 
-    //todo исправить parser - deprecated
     @PostConstruct
     public void init() {
-        this.jwtParser = Jwts.parser().setSigningKey(jwtProperties.getSecretKey());
+        this.jwtParser = Jwts
+                .parserBuilder()
+                .setSigningKey(jwtProperties.getSecretKey().getBytes())
+                .build();
     }
 
     @SneakyThrows
@@ -44,11 +47,10 @@ public class JwtUtil {
 
         Instant tokenCreateTime = Instant.now().plus(tokenValidity, ChronoUnit.DAYS);
         Date validity = new Date(tokenCreateTime.toEpochMilli());
-        //todo signWith deprecated исправить
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(validity)
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
+                .signWith(new SecretKeySpec(jwtProperties.getSecretKey().getBytes(), "AES"),SignatureAlgorithm.ES256)
                 .compact();
     }
 

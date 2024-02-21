@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.dto.response.CommonResponse;
 import org.education.network.mapping.UserProfileMapper;
-import org.education.network.web.exceptions.EmailExistException;
+import org.education.network.web.exceptions.AuthenticationAndAuthorizationNetworkException;
 import org.education.network.web.exceptions.WrongJsonException;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class LogSignService {
     public UserProfileDto registerUser(UserProfileDto signUp) {
 
         if(userService.existsByEmail(signUp.getEmail())){
-            throw new EmailExistException("");
+            throw new AuthenticationAndAuthorizationNetworkException("Email is already exist!");
         }
 
         return profileMapper.toDto(profileService.saveUserProfile(signUp));

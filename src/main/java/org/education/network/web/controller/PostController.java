@@ -59,7 +59,6 @@ public class PostController {
             summary = "delete user profile file")
     @DeleteMapping(value = "/file")
     public ResponseEntity deletePicture(@RequestBody DeleteMediaDto deleteMediaDto, Principal principal) {
-        return ResponseEntityUtil.get(HttpStatus.OK,
-                postService.deleteFile(deleteMediaDto, principal.getName()));
+        return ResponseEntityUtil.get(HttpStatus.OK, postService.deleteFile(deleteMediaDto, principal.getName()));
     }
 }
