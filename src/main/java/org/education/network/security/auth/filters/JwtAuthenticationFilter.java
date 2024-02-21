@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.education.network.dto.response.JwtDto;
 import org.education.network.util.JwtUtil;
 import org.education.network.web.exceptions.AuthenticationNetworkException;
+import org.education.network.web.exceptions.WithoutTokenException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +43,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(jwtDto.getUsername(), "", List.of());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            } else if (claims == null) {
+                throw new WithoutTokenException("");
             }
 
             filterChain.doFilter(request, response);

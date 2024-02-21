@@ -13,7 +13,6 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
 
-    //todo Добавить роли
     @Override
     public UserDetails loadUserByUsername(String email) {
         UserDto userDto = userService.getUserByEmail(email);

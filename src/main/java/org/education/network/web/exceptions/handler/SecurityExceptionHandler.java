@@ -8,6 +8,7 @@ import org.education.network.web.exceptions.EmailExistException;
 import org.education.network.web.exceptions.FileHandlerException;
 import org.education.network.web.exceptions.JwtException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
+import org.education.network.web.exceptions.SameUserException;
 import org.education.network.web.exceptions.WrongJsonException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +20,35 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class SecurityExceptionHandler {
-    //todo Сделать ошибку при запросе без токена
+
+    @ExceptionHandler(value = {
+            SameUserException.class
+    })
+    protected ResponseEntity<Object> withoutLogin() {
+        ErrorRes errorResponse = new ErrorRes(
+                "Bad Request",
+                "There is no bearer token");
+
+        return ResponseEntity.status(404).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body(errorResponse)
+                .build());
+    }
+
+    @ExceptionHandler(value = {
+            SameUserException.class
+    })
+    protected ResponseEntity<Object> samePerson() {
+        ErrorRes errorResponse = new ErrorRes(
+                "Bad Request",
+                "You tried to do an action with yourself");
+
+        return ResponseEntity.status(404).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body(errorResponse)
+                .build());
+    }
+
 
     @ExceptionHandler(value
             = { WrongJsonException.class })

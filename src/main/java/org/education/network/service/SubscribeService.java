@@ -3,6 +3,7 @@ package org.education.network.service;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.model.repository.UserProfileRepository;
+import org.education.network.web.exceptions.SameUserException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,11 @@ public class SubscribeService {
 
     private final UserProfileService userProfileService;
 
-    //todo нельзя подписываться на самого себя
-    public String subscribeUser(String personEmail, String subscriptionEmail) {
-        userProfileService.subcribeUser(personEmail, subscriptionEmail);
+    public String subscribeUser(String personUsername, String subscriptionUsername) {
+        userProfileService.subcribeUser(personUsername, subscriptionUsername);
+        if(personUsername.equals(subscriptionUsername)) {
+            throw new SameUserException("");
+        }
         return "You successfully subscribed";
     }
 
