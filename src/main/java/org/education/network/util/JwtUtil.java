@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
@@ -14,7 +14,6 @@ import org.education.network.web.exceptions.JwtException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -47,10 +46,11 @@ public class JwtUtil {
 
         Instant tokenCreateTime = Instant.now().plus(tokenValidity, ChronoUnit.DAYS);
         Date validity = new Date(tokenCreateTime.toEpochMilli());
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(validity)
-                .signWith(new SecretKeySpec(jwtProperties.getSecretKey().getBytes(), "AES"),SignatureAlgorithm.ES256)
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes()))
                 .compact();
     }
 
@@ -124,4 +124,5 @@ public class JwtUtil {
         String sub = resolveClaims(token).getSubject();
         return mapper.readValue(sub, JwtDto.class);
     }
+
 }
