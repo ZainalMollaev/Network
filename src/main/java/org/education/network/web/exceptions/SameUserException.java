@@ -13,5 +13,4 @@ public class SameUserException extends RuntimeException {
     public SameUserException(Throwable cause) {
         super(cause);
     }
-
 }

@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final static String FILE_DELIMETER = "/";
+    private static final String FILE_DELIMETER = "/";
 
     private final MinioService minioService;
     private final FileProperties fileProperties;

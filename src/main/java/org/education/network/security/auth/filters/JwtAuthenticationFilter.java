@@ -10,8 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.education.network.dto.response.JwtDto;
 import org.education.network.util.JwtUtil;
-import org.education.network.web.exceptions.AuthenticationNetworkException;
-import org.education.network.web.exceptions.WithoutTokenException;
+import org.education.network.web.exceptions.AuthenticationAndAuthorizationNetworkException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,12 +43,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } else if (claims == null) {
-                throw new WithoutTokenException("");
+                throw new AuthenticationAndAuthorizationNetworkException("There is no bearer token");
             }
 
             filterChain.doFilter(request, response);
         } catch (ServletException | IOException e) {
-            throw new AuthenticationNetworkException(e.getMessage());
+            throw new AuthenticationAndAuthorizationNetworkException(e.getMessage());
         }
     }
 

@@ -15,10 +15,9 @@ import org.education.network.enumtypes.Role;
 import org.education.network.properties.FilterProperties;
 import org.education.network.service.UserService;
 import org.education.network.util.JwtUtil;
-import org.education.network.web.exceptions.AuthenticationNetworkException;
+import org.education.network.web.exceptions.AuthenticationAndAuthorizationNetworkException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -52,7 +51,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             try{
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
             } catch (RuntimeException e){
-                throw new BadCredentialsException(e.getMessage());
+                throw new AuthenticationAndAuthorizationNetworkException("Invalid username or password");
             }
 
             //todo исправить хардкод в role
@@ -80,7 +79,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (IOException | ServletException e) {
-            throw new AuthenticationNetworkException(e);
+            throw new AuthenticationAndAuthorizationNetworkException(e);
         }
     }
 
