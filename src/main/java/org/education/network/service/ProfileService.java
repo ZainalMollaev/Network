@@ -12,7 +12,7 @@ public class ProfileService {
 
     public String editUserProfile(UserProfileDto userProfileDto, String subject) {
         userProfileDto.setEmail(subject);
-        userProfileService.saveUserProfileByEmail(userProfileDto);
+        userProfileService.editUserProfileByEmail(userProfileDto);
         return "Changes saved";
     }
 

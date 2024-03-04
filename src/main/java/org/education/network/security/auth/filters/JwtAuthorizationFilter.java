@@ -8,9 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.education.network.dto.bd.UserDto;
-import org.education.network.dto.response.CommonResponse;
 import org.education.network.dto.response.JwtDto;
-import org.education.network.dto.response.LoginRes;
+import org.education.network.dto.response.LoginResDto;
 import org.education.network.enumtypes.Role;
 import org.education.network.properties.FilterProperties;
 import org.education.network.service.UserService;
@@ -64,15 +63,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String refreshToken = jwtUtil.createRefreshToken(jwtDto);
             user.setRefreshToken(refreshToken);
             userService.updateRefreshToken(user.getEmail(), refreshToken);
-            request.setAttribute(properties.getAttributeName(), CommonResponse.builder()
-                    .hasErrors(false)
-                    .body(
-                            LoginRes.builder()
-                                    .email(user.getEmail())
-                                    .accessToken(accessToken)
-                                    .refreshToken(refreshToken)
-                                    .build()
-                    ).build()
+            request.setAttribute("email", user.getEmail());
+            request.setAttribute("accessToken", accessToken);
+            request.setAttribute("refreshToken", refreshToken);
+
+            request.setAttribute(properties.getAttributeName(),
+                        LoginResDto.builder()
+                                .email(user.getEmail())
+                                .accessToken(accessToken)
+                                .refreshToken(refreshToken)
+                                .build()
                     .toString());
         }
 

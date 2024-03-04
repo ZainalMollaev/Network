@@ -7,6 +7,7 @@ import org.education.network.mapping.SubscriptionMapper;
 import org.education.network.mapping.UserProfileMapper;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
+import org.education.network.web.exceptions.AuthenticationAndAuthorizationNetworkException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,12 +28,21 @@ public class UserProfileService {
     private final SubscriptionMapper subscriptionMapper;
 
     public UserProfile saveUserProfile(UserProfileDto user) {
+
+        if(profileRepository.existsByEmail(user.getEmail())){
+            throw new AuthenticationAndAuthorizationNetworkException("The email already exist!");
+        }
+
+        if(profileRepository.existsByPhoneNumber(user.getPhoneNumber())){
+            throw new AuthenticationAndAuthorizationNetworkException("The number already exist!");
+        }
+
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserProfile userAndProfile = profileMapper.toEntity(user);
         return profileRepository.save(userAndProfile);
     }
 
-    public void saveUserProfileByEmail(UserProfileDto userProfileDto) {
+    public void editUserProfileByEmail(UserProfileDto userProfileDto) {
         UserProfile userProfile = profileRepository.findByEmail(userProfileDto.getEmail());
         userProfile = profileMapper.partialUpdate(userProfileDto, userProfile);
         profileRepository.save(userProfile);

@@ -28,10 +28,8 @@ import org.education.network.model.post.Post;
 import org.education.network.model.profile.embedded.Education;
 import org.education.network.model.profile.embedded.LastJob;
 import org.education.network.model.profile.embedded.PersonMain;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.id.uuid.UuidGenerator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -73,10 +71,7 @@ import java.util.UUID;
 public class UserProfile {
 
     @Id
-    @GenericGenerator(
-            name = "UUID",
-            type = UuidGenerator.class
-    )
+    @org.hibernate.annotations.UuidGenerator
     private UUID id;
     @Embedded
     private PersonMain personMain;
