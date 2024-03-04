@@ -9,6 +9,7 @@ import org.education.network.web.exceptions.JwtException;
 import org.education.network.web.exceptions.RequestBodyHandlerException;
 import org.education.network.web.exceptions.SameUserException;
 import org.education.network.web.exceptions.WrongJsonException;
+import org.hibernate.exception.SQLGrammarException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class SecurityExceptionHandler {
+    //todo отсортировать
 
     @ExceptionHandler(value = {
             SameUserException.class
@@ -45,12 +47,26 @@ public class SecurityExceptionHandler {
                 .build());
     }
 
+    //todo исправить errorRepsonse message
     @ExceptionHandler(value
             = { Exception.class })
-    protected ResponseEntity<Object> commonException() {
+    protected ResponseEntity<Object> commonException(Exception e) {
         ErrorRes errorResponse = new ErrorRes(
                 "Not Found",
                 "Common error");
+
+        return ResponseEntity.status(404).body(CommonResponse.builder()
+                .hasErrors(true)
+                .body(errorResponse)
+                .build());
+    }
+
+    @ExceptionHandler(value
+            = { SQLGrammarException.class })
+    protected ResponseEntity<Object> sqlException(SQLGrammarException e) {
+        ErrorRes errorResponse = new ErrorRes(
+                "Not Found",
+                e.getMessage());
 
         return ResponseEntity.status(404).body(CommonResponse.builder()
                 .hasErrors(true)

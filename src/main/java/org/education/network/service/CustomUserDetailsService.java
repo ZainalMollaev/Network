@@ -15,7 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        UserDto userDto = userService.getUserByEmail(email);
+        UserDto userDto = userService.getUserDtoByEmail(email);
         List<String> roles = List.of("USER");
 
         return org.springframework.security.core.userdetails.User.builder()

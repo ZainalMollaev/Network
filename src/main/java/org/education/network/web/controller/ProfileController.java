@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserProfileDto;
-import org.education.network.service.ProfileService;
+import org.education.network.service.UserProfileService;
 import org.education.network.util.ResponseEntityUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.security.Principal;
 @Tag(name = "ProfileController", description = "operations with profile")
 public class ProfileController {
 
-    private final ProfileService profileService;
+    private final UserProfileService profileService;
 
     @Operation(summary = "edit profile", description = "edit all fields")
     @PutMapping("/edit")
@@ -33,7 +33,7 @@ public class ProfileController {
     @Operation(summary = "get profile", description = "get all fields")
     @GetMapping
     public ResponseEntity getProfileEmail(Principal principal) {
-        return ResponseEntityUtil.get(HttpStatus.OK, profileService.getUserProfile(principal.getName()));
+        return ResponseEntityUtil.get(HttpStatus.OK, profileService.getUserProfileDto(principal.getName()));
     }
 
 }

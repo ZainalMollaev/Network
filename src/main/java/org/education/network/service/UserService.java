@@ -1,34 +1,30 @@
 package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
+import org.education.network.dao.UserDao;
+import org.education.network.dto.bd.UserDto;
 import org.education.network.mapping.UserMapper;
 import org.education.network.model.User;
-import org.education.network.dto.bd.UserDto;
-import org.education.network.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final UserDao userDao;
 
-    public UserDto getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
+    public UserDto getUserDtoByEmail(String email) {
+        User user = userDao.getUserByEmail(email);
         return userMapper.userToUserDto(user);
     }
 
-    public Boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
     public void updateRefreshToken(String username, String refreshToken) {
-        userRepository.updateRefreshByEmail(username, refreshToken);
+        userDao.updateRefreshToken(username, refreshToken);
     }
 
     public String getRefreshTokenByEmail(String email) {
-        return userRepository.findRefreshByEmail(email);
+        return userDao.getRefreshTokenByEmail(email);
     }
 
 }

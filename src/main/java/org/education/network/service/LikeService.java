@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.LikeDto;
 import org.education.network.dto.request.LikeRequestDto;
-import org.education.network.mapping.LikeMapper;
-import org.education.network.model.repository.LikeRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +12,6 @@ import org.springframework.stereotype.Service;
 public class LikeService {
 
     private final BrokerService brokerService;
-    private final LikeRepository repository;
-    private final LikeMapper mapper;
     private final ObjectMapper om;
 
     public void likeOperation(LikeRequestDto likeRequestDto, String username) {
@@ -32,8 +28,5 @@ public class LikeService {
         }
     }
 
-    public void saveLike(LikeDto likeBrokerDto) {
-        repository.save( mapper.toEntity(likeBrokerDto));
-    }
 
 }

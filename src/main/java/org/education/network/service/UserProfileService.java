@@ -1,6 +1,7 @@
 package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
+import org.education.network.dao.UserProfileDao;
 import org.education.network.dto.bd.UserProfileDto;
 import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.mapping.SubscriptionMapper;
@@ -23,51 +24,52 @@ import java.util.List;
 public class UserProfileService {
 
     private final UserProfileRepository profileRepository;
+    private final UserProfileDao profileDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserProfileMapper profileMapper;
     private final SubscriptionMapper subscriptionMapper;
 
     public UserProfile saveUserProfile(UserProfileDto user) {
 
-        if(profileRepository.existsByEmail(user.getEmail())){
+        if(profileDao.existsByEmail(user.getEmail())){
             throw new AuthenticationAndAuthorizationNetworkException("The email already exist!");
         }
 
-        if(profileRepository.existsByPhoneNumber(user.getPhoneNumber())){
+        if(profileDao.existsByPhoneNumber(user.getPhoneNumber())){
             throw new AuthenticationAndAuthorizationNetworkException("The number already exist!");
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         UserProfile userAndProfile = profileMapper.toEntity(user);
-        return profileRepository.save(userAndProfile);
+        return profileDao.save(userAndProfile);
     }
 
     public void editUserProfileByEmail(UserProfileDto userProfileDto) {
-        UserProfile userProfile = profileRepository.findByEmail(userProfileDto.getEmail());
+        UserProfile userProfile = profileDao.findByEmail(userProfileDto.getEmail());
         userProfile = profileMapper.partialUpdate(userProfileDto, userProfile);
         profileRepository.save(userProfile);
     }
 
     public UserProfile getUserProfile(String username) {
-        return profileRepository.findByEmail(username);
+        return profileDao.findByEmail(username);
     }
 
     public UserProfileDto getUserProfileDto(String username) {
-        UserProfile userProfile = profileRepository.findByEmail(username);
+        UserProfile userProfile = profileDao.findByEmail(username);
         return profileMapper.toDto(userProfile);
     }
 
     @Transactional
     @Modifying
     public void subcribeUser(String personEmail, String subscriptionEmail) {
-        UserProfile person = profileRepository.findByEmail(personEmail);
-        UserProfile subscription = profileRepository.findByEmail(subscriptionEmail);
+        UserProfile person = profileDao.findByEmail(personEmail);
+        UserProfile subscription = profileDao.findByEmail(subscriptionEmail);
         person.addSubscription(subscription);
     }
 
     public List<SubscriptionDto> getAllUserSubscribers(String email, Pageable pageable) {
 
-        Page<UserProfile> profile2 = profileRepository.findByEmailWithPage(email, pageable);
+        Page<UserProfile> profile2 = profileDao.findByEmailWithPage(email, pageable);
         List<SubscriptionDto> list = new ArrayList<>();
 
         for (UserProfile profile:
@@ -87,6 +89,12 @@ public class UserProfileService {
                         .append(like)
                         .append("%").toString();
 
-        return profileRepository.findProperSubscriptionsOrSubscribersByName(username, likePattern);
+        return profileDao.findProperSubscriptionsOrSubscribersByName(username, likePattern);
+    }
+
+    public String editUserProfile(UserProfileDto userProfileDto, String subject) {
+        userProfileDto.setEmail(subject);
+        editUserProfileByEmail(userProfileDto);
+        return "Changes saved";
     }
 }
