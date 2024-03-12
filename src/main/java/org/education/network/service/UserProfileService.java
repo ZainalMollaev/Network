@@ -1,21 +1,26 @@
 package org.education.network.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.education.network.dto.bd.UserProfileDto;
+import org.education.network.dto.request.SubscribeFilter;
 import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.mapping.SubscriptionMapper;
 import org.education.network.mapping.UserProfileMapper;
+import org.education.network.model.profile.Language;
 import org.education.network.model.profile.UserProfile;
 import org.education.network.model.repository.UserProfileRepository;
+import org.education.network.util.PredicateBuilder;
 import org.education.network.web.exceptions.AuthenticationAndAuthorizationNetworkException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +31,7 @@ public class UserProfileService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserProfileMapper profileMapper;
     private final SubscriptionMapper subscriptionMapper;
+    private final EntityManager em;
 
     public UserProfile saveUserProfile(UserProfileDto user) {
 
@@ -65,18 +71,33 @@ public class UserProfileService {
         person.addSubscription(subscription);
     }
 
-    public List<SubscriptionDto> getAllUserSubscribers(String email, Pageable pageable) {
+    public List<SubscriptionDto> getAllUserSubscribers(SubscribeFilter filter) {
 
-        Page<UserProfile> profile2 = profileRepository.findByEmailWithPage(email, pageable);
-        List<SubscriptionDto> list = new ArrayList<>();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<UserProfile> query = cb.createQuery(UserProfile.class);
+        Root<UserProfile> userProfile = query.from(UserProfile.class);
+        Join<UserProfile, UserProfile> subscribes = userProfile.join("subscribes");
+        Join<UserProfile, Language> languages = subscribes.join("languages");
 
-        for (UserProfile profile:
-                profile2.getContent()) {
-            SubscriptionDto subDto = subscriptionMapper.toSubDto(profile);
-            list.add(subDto);
-        }
+        CriteriaQuery<UserProfile> select = query.select(subscribes);
 
-        return list;
+        PredicateBuilder predicate = new PredicateBuilder(cb);
+        predicate = predicate
+                .like(filter.getLikePattern(), subscribes.get("personMain").get("name"), subscribes.get("personMain").get("lastname"))
+                .in(filter.getLanguages(), languages.get("name"))
+                .in(filter.getLocations(), subscribes.get("location"))
+                .in(filter.getCompanies(), subscribes.get("lastjob").get("company"));
+
+        select.where(predicate.getPredicate());
+
+        List<UserProfile> resultList = em
+                .createQuery(query)
+                .setFirstResult((int) filter.getPageable().getOffset())
+                .setMaxResults(filter.getPageable().getPageSize())
+                .getResultList();
+
+
+        return subscriptionMapper.toListDto(resultList);
     }
 
     public List<UserProfileRepository.NameOnly> findProperSubscriptionsOrSubscribersByName(String username, String like) {
