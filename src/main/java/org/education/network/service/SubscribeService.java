@@ -1,12 +1,14 @@
 package org.education.network.service;
 
 import lombok.RequiredArgsConstructor;
+import org.education.network.dto.request.SubscribeFilter;
 import org.education.network.dto.response.SubscriptionDto;
 import org.education.network.model.repository.UserProfileRepository;
 import org.education.network.web.exceptions.SameUserException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -23,8 +25,8 @@ public class SubscribeService {
         return "You successfully subscribed";
     }
 
-    public List<SubscriptionDto> getAllUserSubscriptions(String email, Pageable pageable) {
-        return userProfileService.getAllUserSubscribers(email, pageable);
+    public List<SubscriptionDto> getAllUserSubscriptions(Principal principal, Pageable pageable, SubscribeFilter subscribeFilter) {
+        return userProfileService.getAllUserSubscribers(subscribeFilter.setPag(pageable).setPrin(principal));
     }
 
     public List<UserProfileRepository.NameOnly> findProperSubscriptionsOrSubscribersByName(String username, String likePattern) {

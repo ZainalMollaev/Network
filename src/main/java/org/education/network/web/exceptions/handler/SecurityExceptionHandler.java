@@ -47,14 +47,10 @@ public class SecurityExceptionHandler {
 
     @ExceptionHandler(value
             = { Exception.class })
-    protected ResponseEntity<Object> commonException() {
-        ErrorRes errorResponse = new ErrorRes(
-                "Not Found",
-                "Common error");
-
+    protected ResponseEntity<Object> commonException(Exception e) {
         return ResponseEntity.status(404).body(CommonResponse.builder()
                 .hasErrors(true)
-                .body(errorResponse)
+                .body(e.getMessage())
                 .build());
     }
 

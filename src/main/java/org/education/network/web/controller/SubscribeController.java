@@ -3,12 +3,14 @@ package org.education.network.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.education.network.dto.request.SubscribeFilter;
 import org.education.network.service.SubscribeService;
 import org.education.network.util.ResponseEntityUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +36,10 @@ public class SubscribeController {
 
     @Operation(summary = "get all user subscriptions")
     @GetMapping
-    public ResponseEntity getAllUserSubscriptions(Principal principal, Pageable pageable) {
-        return ResponseEntityUtil.get(HttpStatus.OK, subscribeService.getAllUserSubscriptions(principal.getName(), pageable));
+    public ResponseEntity getAllUserSubscriptions(Principal principal,
+                                                  @ModelAttribute SubscribeFilter filter,
+                                                  Pageable pageable) {
+        return ResponseEntityUtil.get(HttpStatus.OK, subscribeService.getAllUserSubscriptions(principal, pageable, filter));
     }
 
     @Operation(summary = "find subscriptions or subscribers by string")

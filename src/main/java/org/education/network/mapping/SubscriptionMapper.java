@@ -28,6 +28,8 @@ public abstract class SubscriptionMapper {
     @Autowired
     private UserRepository userRepository;
 
+    public abstract List<SubscriptionDto> toListDto(List<UserProfile> profiles);
+
     @Mapping(source = "id", target = "id")
     @Mapping(source = "creationDate", target = "creationDate")
     @Mapping(target = "img", expression = "java(post.getId().toString() + \"/postsSub\")")
