@@ -27,7 +27,11 @@ public class FileService {
     public byte[] getFile(Bucket bucket, String folder, String photoId) {
         try {
             return minioService.getFile(bucket,
-                                    photoId + "/" + folder + "/" + bucket.getBucket())
+                                    photoId +
+                                            FILE_DELIMETER +
+                                            folder +
+                                            FILE_DELIMETER +
+                                            bucket.getBucket())
                     .readAllBytes();
         } catch (IOException e) {
             throw new FileHandlerException(e);
@@ -91,7 +95,12 @@ public class FileService {
 
         List<FileProperties.Compress> compresses = fileProperties.getProperCompress(deleteMediaDto.getBucket().getBucket());
         compresses.forEach( compress -> {
-                    String path = id + "/" + compress.getName() + "/" + deleteMediaDto.getFileName();
+                    String path = id +
+                            FILE_DELIMETER +
+                            compress.getName() +
+                            FILE_DELIMETER +
+                            deleteMediaDto.getFileName();
+
                     minioService.deleteFile(deleteMediaDto.getBucket(),
                             path);
                 }

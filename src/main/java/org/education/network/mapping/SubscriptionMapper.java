@@ -39,7 +39,7 @@ public abstract class SubscriptionMapper {
     @Mapping(source = "personMain.lastname", target = "lastname")
     @Mapping(source = "lastjob.title", target = "title")
     @Mapping(source = "lastjob.company", target = "company")
-    @Mapping(source = "location", target = "location")
+    @Mapping(source = "location.location", target = "location")
     @Mapping(target = "posts", expression = "java(subPostDtos(profile.getUser().getEmail()))")
     @Mapping(target = "commonSubs", expression = "java(commonSubs(profile.getUser().getId()))")
     public abstract SubscriptionDto toSubDto(UserProfile profile);
