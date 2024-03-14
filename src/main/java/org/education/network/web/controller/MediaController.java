@@ -31,7 +31,7 @@ import java.security.Principal;
 @Tag(name = "MediaController", description = "CRUD of media")
 public class MediaController {
 
-    //todo тест и exception handler на неправильный логин.
+    //todo тест и exception handler на неправильный логин
     private final MediaService mediaService;
 
     @Operation(
