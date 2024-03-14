@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.education.network.enumtypes.Gender;
+import org.education.network.enumtypes.Privacy;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -33,6 +34,9 @@ public class PersonMain {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Privacy birthPrivacy;
 
     @Override
     public boolean equals(Object o) {

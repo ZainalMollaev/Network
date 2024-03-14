@@ -27,6 +27,7 @@ import org.education.network.model.User;
 import org.education.network.model.post.Post;
 import org.education.network.model.profile.embedded.Education;
 import org.education.network.model.profile.embedded.LastJob;
+import org.education.network.model.profile.embedded.Location;
 import org.education.network.model.profile.embedded.PersonMain;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -79,7 +80,8 @@ public class UserProfile {
     private LastJob lastjob;
     @Embedded
     private Education education;
-    private String location;
+    @Embedded
+    private Location location;
     @Column(unique = true, nullable = false)
     private String phoneNumber;
 
